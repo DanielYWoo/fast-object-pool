@@ -1,5 +1,3 @@
-package benchmark;
-
 import com.haiwanwan.common.objectpool.ObjectFactory;
 import com.haiwanwan.common.objectpool.ObjectPool;
 import com.haiwanwan.common.objectpool.PoolConfig;
@@ -21,7 +19,7 @@ public class BenchmarkFastObjectPool {
         config.setPartitionSize(5);
         config.setMaxSize(10);
         config.setMinSize(5);
-        config.setMaxIdleMilliseconds(60 * 1000 * 5L);
+        config.setMaxIdleMilliseconds(60 * 1000 * 5);
 
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
             @Override

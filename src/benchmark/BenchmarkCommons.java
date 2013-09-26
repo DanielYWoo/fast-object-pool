@@ -1,5 +1,3 @@
-package benchmark;
-
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
