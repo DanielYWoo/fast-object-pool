@@ -8,6 +8,11 @@ public class Benchmark {
         System.out.println("-----------warm up------------");
         new BenchmarkFastObjectPool(50,  1000);
         new BenchmarkCommons(50,  1000);
+        new BenchmarkNoPool(50,  1000);
+
+        System.out.println("-----------no pool------------");
+        new BenchmarkNoPool(50,  1000);
+        new BenchmarkNoPool(100,  1000);
 
         System.out.println("-----------fast object pool------------");
         new BenchmarkFastObjectPool(50,  500000);
@@ -24,8 +29,8 @@ public class Benchmark {
         new BenchmarkFastObjectPool(600, 10000);
 
         System.out.println("------------Apache commons pool-----------");
-        new BenchmarkCommons(50,  500000);
-        new BenchmarkCommons(100, 500000);
+        //new BenchmarkCommons(50,  500000);
+        new BenchmarkCommons(100, 10000);
         new BenchmarkCommons(150, 300000);
         new BenchmarkCommons(200, 300000);
         new BenchmarkCommons(250, 100000);

@@ -22,9 +22,6 @@
                 <fileset dir="${lib}" includes="*.jar"></fileset>
             </classpath>
         </javac>
-        <copy todir="${build.stage}">
-            <fileset dir="${src.main}/resources" includes="**/*"></fileset>
-        </copy>
     </target>
 
     <target name="dist" depends="compile" description="generate the distribution" >
