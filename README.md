@@ -63,3 +63,5 @@ The pool will create multiple partitions, in most cases a thread always access a
 How fast it is
 --------------
 The source contains a benchmark test, you can run it on your own machine. On my 2010-mid iMac, it's at least 50 times faster than commons-pool. As threads increase, commons-pool throughput drops quickly but FOP remains very good performance.
+The figure belows shows that Commons-Pool is much slower than FOP, and when the worker threads goes up to 100, Commons-Pool throughput drops dramatically.
+![alt tag](https://github.com/DanielYWoo/fast-object-pool/tree/master/docs/benchmark.png)
