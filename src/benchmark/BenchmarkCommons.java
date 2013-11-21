@@ -111,10 +111,12 @@ public class BenchmarkCommons {
                 }
             }
             long t2 = System.currentTimeMillis();
-            statsAvgRespTime[id] =  ((double) (t2 - t1)) / loop;
-            statsAvgBorrow[id] =  ((double) tb) / loop;
-            statsAvgReturn[id] =  ((double) tr) / loop;
             latch.countDown();
+            synchronized (statsAvgRespTime) {
+                statsAvgRespTime[id] =  ((double) (t2 - t1)) / loop;
+                statsAvgBorrow[id] =  ((double) tb) / loop;
+                statsAvgReturn[id] =  ((double) tr) / loop;
+            }
         }
     }
 }

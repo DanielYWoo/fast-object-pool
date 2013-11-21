@@ -11,8 +11,10 @@ import java.util.concurrent.CountDownLatch;
  */
 public class BenchmarkFastObjectPool {
 
+    private static double[] statsAvgRespTime;
+
     public BenchmarkFastObjectPool(int workerCount, int loop) throws InterruptedException {
-        double[] statsAvgRespTime = new double[workerCount];
+        statsAvgRespTime = new double[workerCount];
         CountDownLatch latch = new CountDownLatch(workerCount);
 
         PoolConfig config = new PoolConfig();
@@ -37,7 +39,7 @@ public class BenchmarkFastObjectPool {
         ObjectPool pool = new ObjectPool(config, factory);
         Worker[] workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(i, pool, latch, loop, statsAvgRespTime);
+            workers[i] = new Worker(i, pool, latch, loop);
         }
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < workerCount; i++) {
@@ -59,14 +61,12 @@ public class BenchmarkFastObjectPool {
         private final ObjectPool<StringBuilder> pool;
         private final CountDownLatch latch;
         private final int loop;
-        private final double[] statsAvgRespTime;
 
-        public Worker(int id, ObjectPool<StringBuilder> pool, CountDownLatch latch, int loop, double[] statsAvgRespTime) {
+        public Worker(int id, ObjectPool<StringBuilder> pool, CountDownLatch latch, int loop) {
             this.id = id;
             this.pool = pool;
             this.latch = latch;
             this.loop = loop;
-            this.statsAvgRespTime = statsAvgRespTime;
         }
 
         @Override public void run() {
@@ -83,7 +83,9 @@ public class BenchmarkFastObjectPool {
                 }
             }
             long t2 = System.currentTimeMillis();
-            statsAvgRespTime[id] =  ((double) (t2 - t1)) / loop;
+            synchronized (statsAvgRespTime) {
+                statsAvgRespTime[id] =  ((double) (t2 - t1)) / loop;
+            }
             latch.countDown();
         }
     }
