@@ -65,3 +65,7 @@ How fast it is
 The source contains a benchmark test, you can run it on your own machine. On my 2010-mid iMac, it's at least 50 times faster than commons-pool. As threads increase, commons-pool throughput drops quickly but FOP remains very good performance.
 The figure belows shows that Commons-Pool is much slower than FOP, and when the worker threads goes up to 100, Commons-Pool throughput drops dramatically.
 ![](docs/benchmark.png?raw=true)
+
+Who is using it
+---------------
+The famous mobile game 'Million Arthurs' has a web based chat feature, the chat nodes use thrift to communicate between each other to route chat messages. Thrift stub needs an object pool because they are not thread safe, this project has been integrated into the chat system to make sure anytime a thrift client borrowed from the pool can only be used with one worker thread.
