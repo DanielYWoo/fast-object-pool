@@ -7,6 +7,13 @@
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
 
+	<licenses>
+		<license>
+			<name>BSD License</name>
+			<url>http://www.opensource.org/licenses/bsd-license.php</url>
+		</license>
+	  </licenses>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
