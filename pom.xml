@@ -1,11 +1,23 @@
 <?xmlversion="1.0"encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0http://maven.apache.org/maven-v4_0_0.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<name>Fast Object Pool</name>
+	<url>https://github.com/DanielYWoo/fast-object-pool</url>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.haiwanwan.common</groupId>
 	<artifactId>fast-object-pool</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
+	<description>An extremely fast object pool with zero dependencies</description>
+
+	<developers>
+		<developer>
+			<id>eric</id>
+			<name>Eric</name>
+			<email>eredmond@codehaus.org</email>
+			<url>http://eric.propellors.net</url>
+		</developer>
+	</developers>
 
 	<licenses>
 		<license>
@@ -13,6 +25,11 @@
 			<url>http://www.opensource.org/licenses/bsd-license.php</url>
 		</license>
 	</licenses>
+
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/DanielYWoo/fast-object-pool/issues?state=open</url>
+	</issueManagement>
 
 	<dependencies>
 		<dependency>
@@ -24,6 +41,7 @@
 	</dependencies>
 
 	<scm>
+		<url>https://github.com/DanielYWoo/fast-object-pool</url>
 		<connection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</connection>
 		<developerConnection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</developerConnection>
 	</scm>
@@ -59,6 +77,19 @@
 						<id>attach-javadocs</id>
 						<goals>
 							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
 						</goals>
 					</execution>
 				</executions>
