@@ -60,9 +60,8 @@ public class ObjectPool<T> {
             }
         }
         if (freeObject == null) {
-            subPool.increaseObjects(1); // increase objects and return one, it will return null if reach max size
-        }
-        if (freeObject == null) { // no more free objects in this parition, wait then
+            // increase objects and return one, it will return null if reach max size
+            subPool.increaseObjects(1);
             try {
                 if (blocking) {
                     freeObject = subPool.getObjectQueue().take();
