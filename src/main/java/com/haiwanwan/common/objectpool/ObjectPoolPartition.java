@@ -2,6 +2,7 @@ package com.haiwanwan.common.objectpool;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Logger;
 
 /**
  * @author Daniel
@@ -12,7 +13,7 @@ public class ObjectPoolPartition<T> {
     private final int partition;
     private final BlockingQueue<Poolable<T>> objectQueue;
     private final ObjectFactory<T> objectFactory;
-    private int count;
+    private int totalCount;
 
     public ObjectPoolPartition(int partition, PoolConfig config, ObjectFactory<T> objectFactory) throws InterruptedException {
         this.config = config;
@@ -22,7 +23,7 @@ public class ObjectPoolPartition<T> {
         for (int i = 0; i < config.getMinSize(); i++) {
             objectQueue.put(new Poolable<>(objectFactory.create(), partition));
         }
-        count = config.getMinSize();
+        totalCount = config.getMinSize();
     }
 
     public BlockingQueue<Poolable<T>> getObjectQueue() {
@@ -30,14 +31,15 @@ public class ObjectPoolPartition<T> {
     }
 
     public synchronized int increaseObjects(int delta) {
-        if (delta + count > config.getMaxSize()) {
-            delta = config.getMaxSize() - count;
+        if (delta + totalCount > config.getMaxSize()) {
+            delta = config.getMaxSize() - totalCount;
         }
         try {
             for (int i = 0; i < delta; i++) {
                 objectQueue.put(new Poolable<>(objectFactory.create(), partition));
             }
-            count += delta;
+            totalCount += delta;
+            Log.debug("increase objects: count=", totalCount, ", queue size=", objectQueue.size());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -46,8 +48,42 @@ public class ObjectPoolPartition<T> {
 
     public synchronized boolean decreaseObject(Poolable<T> obj) {
         objectFactory.destroy(obj.getObject());
-        count--;
+        totalCount--;
         return true;
     }
 
+    public synchronized int getTotalCount() {
+        return totalCount;
+    }
+
+    // set the scavenge interval carefully
+    public synchronized void scavenge() throws InterruptedException {
+        int delta = this.totalCount - config.getMinSize();
+        if (delta <= 0) return;
+        int removed = 0;
+        long now = System.currentTimeMillis();
+        Poolable<T> obj;
+        while (delta-- > 0 && (obj = objectQueue.poll()) != null) {
+            Log.debug("obj=", obj, ", now-last=", now - obj.getLastAccessTs(), ", max idle=", config.getMaxIdleMilliseconds());
+            if (now - obj.getLastAccessTs() > config.getMaxIdleMilliseconds()) {
+                decreaseObject(obj); // shrink the pool size if the object reaches max idle time
+                removed++;
+            } else {
+                objectQueue.put(obj); //put it back
+            }
+        }
+        if (removed > 0) Log.debug(removed, " objects were scavenged.");
+    }
+
+    public synchronized int shutdown() {
+        int removed = 0;
+        while (this.totalCount > 0) {
+            Poolable<T> obj = objectQueue.poll();
+            if (obj != null) {
+                decreaseObject(obj);
+                removed++;
+            }
+        }
+        return removed;
+    }
 }

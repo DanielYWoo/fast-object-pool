@@ -1,4 +1,4 @@
-<?xmlversion="1.0"encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0http://maven.apache.org/maven-v4_0_0.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<name>Fast Object Pool</name>
@@ -12,10 +12,10 @@
 
 	<developers>
 		<developer>
-			<id>eric</id>
-			<name>Eric</name>
-			<email>eredmond@codehaus.org</email>
-			<url>http://eric.propellors.net</url>
+			<id>Daniel</id>
+			<name>Daniel</name>
+			<email>daniel.y.woo@gmail.com</email>
+			<url>https://github.com/DanielYWoo</url>
 		</developer>
 	</developers>
 
@@ -38,6 +38,12 @@
 			<scope>test</scope>
 			<version>4.11</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <scope>test</scope> <!-- benchmark only -->
+            <version>2.2</version>
+        </dependency>
 	</dependencies>
 
 	<scm>

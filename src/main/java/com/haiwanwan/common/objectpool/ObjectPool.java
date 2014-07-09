@@ -10,7 +10,8 @@ public class ObjectPool<T> {
     protected final PoolConfig config;
     protected final ObjectFactory<T> factory;
     protected final ObjectPoolPartition<T>[] partitions;
-    private boolean shudown;
+    private final Scavenger scavenger;
+    private volatile boolean shuttingDown;
 
     public ObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory) {
         this.config = poolConfig;
@@ -23,6 +24,8 @@ public class ObjectPool<T> {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        this.scavenger = new Scavenger();
+        this.scavenger.start();
     }
 
     public Poolable<T> borrowObject() {
@@ -42,23 +45,12 @@ public class ObjectPool<T> {
     }
 
     private Poolable<T> getObject(boolean blocking) {
-        if (shudown) {
+        if (shuttingDown) {
             throw new IllegalStateException("Your pool is shutting down");
         }
         int partition = (int) (Thread.currentThread().getId() % this.config.getPartitionSize());
         ObjectPoolPartition<T> subPool = this.partitions[partition];
         Poolable<T> freeObject = subPool.getObjectQueue().poll();
-        if (freeObject == null) {
-            // try other partitions
-            for (int i = 0; i < this.partitions.length; i++) {
-                if (i != partition) {
-                    freeObject = this.partitions[i].getObjectQueue().poll();
-                    if (freeObject != null) {
-                        break; // found one, stop
-                    }
-                }
-            }
-        }
         if (freeObject == null) {
             subPool.increaseObjects(1); // increase objects and return one, it will return null if reach max size
         }
@@ -82,20 +74,53 @@ public class ObjectPool<T> {
 
     public void returnObject(Poolable<T> obj) {
         ObjectPoolPartition<T> subPool = this.partitions[obj.getPartition()];
-        if (System.currentTimeMillis() - obj.getLastAccessTs() > config.getMaxIdleMilliseconds()) {
-            subPool.decreaseObject(obj); // shrink the pool size if the object reaches max idle time
-        } else {
-            try {
-                subPool.getObjectQueue().put(obj);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e); // impossible for now
-            }
+        try {
+            subPool.getObjectQueue().put(obj);
+            Log.debug("return object: queue size:" + subPool.getObjectQueue().size() + ", partition id:" + obj.getPartition());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e); // impossible for now
         }
     }
 
     public void close() {
-        shudown = true;
+        shuttingDown = true;
         //TODO: gracefully destroy all objects in the pool
     }
 
+    public int getSize() {
+        int size = 0;
+        for (ObjectPoolPartition<T> subPool : partitions) {
+            size += subPool.getTotalCount();
+        }
+        return size;
+    }
+
+    public synchronized int shutdown() throws InterruptedException {
+        shuttingDown = true;
+        int removed = 0;
+        scavenger.interrupt();
+        scavenger.join();
+        for (ObjectPoolPartition<T> partition : partitions) {
+            removed += partition.shutdown();
+        }
+        return removed;
+    }
+
+    private class Scavenger extends Thread {
+
+        @Override
+        public void run() {
+            int partition = 0;
+            while (!ObjectPool.this.shuttingDown) {
+                try {
+                    Thread.sleep(config.getScavengeIntervalMilliseconds());
+                    partition = ++partition % config.getPartitionSize();
+                    Log.debug("scavenge sub pool ",  partition);
+                    partitions[partition].scavenge();
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+
+    }
 }

@@ -10,18 +10,18 @@ public class Benchmark {
         new BenchmarkCommons(50,  1000);
 
         System.out.println("-----------fast object pool------------");
-        new BenchmarkFastObjectPool(50,  500000);
-        new BenchmarkFastObjectPool(100, 500000);
-        new BenchmarkFastObjectPool(150, 500000);
-        new BenchmarkFastObjectPool(200, 300000);
-        new BenchmarkFastObjectPool(250, 300000);
-        new BenchmarkFastObjectPool(300, 300000);
-        new BenchmarkFastObjectPool(350, 200000);
-        new BenchmarkFastObjectPool(400, 200000);
-        new BenchmarkFastObjectPool(450, 200000);
-        new BenchmarkFastObjectPool(500, 100000);
-        new BenchmarkFastObjectPool(550, 100000);
-        new BenchmarkFastObjectPool(600, 100000);
+        new BenchmarkFastObjectPool(50,  50000);
+        new BenchmarkFastObjectPool(100, 50000);
+        new BenchmarkFastObjectPool(150, 50000);
+        new BenchmarkFastObjectPool(200, 30000);
+        new BenchmarkFastObjectPool(250, 30000);
+        new BenchmarkFastObjectPool(300, 30000);
+        new BenchmarkFastObjectPool(350, 20000);
+        new BenchmarkFastObjectPool(400, 20000);
+        new BenchmarkFastObjectPool(450, 20000);
+        new BenchmarkFastObjectPool(500, 10000);
+        new BenchmarkFastObjectPool(550, 10000);
+        new BenchmarkFastObjectPool(600, 10000);
 
         System.out.println("------------Apache commons pool-----------");
         // too slow, so less loops

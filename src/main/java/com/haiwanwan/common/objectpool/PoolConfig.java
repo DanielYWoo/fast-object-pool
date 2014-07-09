@@ -13,6 +13,7 @@ public class PoolConfig {
     private int minSize = DEFAULT_MIN_SIZE;
     private int maxSize = DEFAULT_MAX_SIZE;
     private int partitionSize = 4;
+    private int scavengeIntervalMilliseconds = 1000 * 60 * 2;
 
     public int getMaxWaitMilliseconds() {
         return maxWaitMilliseconds;
@@ -54,4 +55,11 @@ public class PoolConfig {
         this.partitionSize = partitionSize;
     }
 
+    public int getScavengeIntervalMilliseconds() {
+        return scavengeIntervalMilliseconds;
+    }
+
+    public void setScavengeIntervalMilliseconds(int scavengeIntervalMilliseconds) {
+        this.scavengeIntervalMilliseconds = scavengeIntervalMilliseconds;
+    }
 }

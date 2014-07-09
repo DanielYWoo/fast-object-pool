@@ -67,7 +67,7 @@ The source contains a benchmark test, you can run it on your own machine. On my 
 The figure belows shows that Commons-Pool 1.x is much slower than FOP, and when the worker threads goes up to 100, Commons-Pool throughput drops dramatically.
 ![](docs/benchmark.png?raw=true)
 
-I believe Commons-Pool 2.x will be much faster since they rewriten everything.
+I believe Commons-Pool 2.x will be much faster since they rewriten everything. Update: I updated the benchmark with Commons-Pool 2.2, FOP is still 30 times faster than CP 2.2.
 
 Who is using it
 ---------------

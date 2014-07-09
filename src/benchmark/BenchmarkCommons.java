@@ -1,5 +1,8 @@
-import org.apache.commons.pool.PoolableObjectFactory;
-import org.apache.commons.pool.impl.GenericObjectPool;
+
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.CountDownLatch;
@@ -20,28 +23,35 @@ public class BenchmarkCommons {
         statsAvgBorrow = new double[workerCount];
         statsAvgReturn = new double[workerCount];
 
-        GenericObjectPool pool = new GenericObjectPool(new PoolableObjectFactory() {
+        GenericObjectPool pool = new GenericObjectPool(new PooledObjectFactory() {
             @Override
-            public Object makeObject() throws Exception {
-                return new StringBuilder();
+            public PooledObject makeObject() throws Exception {
+                return new DefaultPooledObject(new StringBuilder());
             }
+
             @Override
-            public void destroyObject(Object o) throws Exception {
+            public void destroyObject(PooledObject pooledObject) throws Exception {
+
             }
+
             @Override
-            public boolean validateObject(Object o) {
-                return true;
+            public boolean validateObject(PooledObject pooledObject) {
+                return false;
             }
+
             @Override
-            public void activateObject(Object o) throws Exception {
+            public void activateObject(PooledObject pooledObject) throws Exception {
+
             }
+
             @Override
-            public void passivateObject(Object o) throws Exception {
+            public void passivateObject(PooledObject pooledObject) throws Exception {
+
             }
         });
         pool.setMinIdle(25);
         pool.setMaxIdle(50);
-        pool.setMaxActive(50);
+        pool.setMaxTotal(50);
         pool.setMinEvictableIdleTimeMillis(60 * 1000 * 5L);
 
         Worker[] workers = new Worker[workerCount];
