@@ -7,7 +7,7 @@
 	<groupId>com.haiwanwan.common</groupId>
 	<artifactId>fast-object-pool</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<description>An extremely fast object pool with zero dependencies</description>
 
 	<developers>
