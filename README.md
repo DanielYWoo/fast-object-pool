@@ -72,3 +72,13 @@ I believe Commons-Pool 2.x will be much faster since they rewriten everything. U
 Who is using it
 ---------------
 The famous mobile game 'Million Arthurs' has a web based chat feature, the chat nodes use thrift to communicate between each other to route chat messages. Thrift stub needs an object pool because they are not thread safe, this project has been integrated into the chat system to make sure anytime a thrift client borrowed from the pool can only be used with one worker thread.
+
+Maven dependency
+---------------
+```
+        <dependency>
+            <groupId>com.haiwanwan.common</groupId>
+            <artifactId>fast-object-pool</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+```
