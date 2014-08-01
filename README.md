@@ -52,6 +52,7 @@ try {
 } finally {
     if (obj != null) {
         pool.returnObject(obj);
+        // or obj.returnObject();
     }
 }
 ```

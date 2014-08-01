@@ -9,19 +9,21 @@ import java.util.logging.Logger;
  */
 public class ObjectPoolPartition<T> {
 
+    private final ObjectPool<T> pool;
     private final PoolConfig config;
     private final int partition;
     private final BlockingQueue<Poolable<T>> objectQueue;
     private final ObjectFactory<T> objectFactory;
     private int totalCount;
 
-    public ObjectPoolPartition(int partition, PoolConfig config, ObjectFactory<T> objectFactory) throws InterruptedException {
+    public ObjectPoolPartition(ObjectPool<T> pool, int partition, PoolConfig config, ObjectFactory<T> objectFactory) throws InterruptedException {
+        this.pool = pool;
         this.config = config;
         this.objectFactory = objectFactory;
         this.partition = partition;
         this.objectQueue = new ArrayBlockingQueue<>(config.getMaxSize());
         for (int i = 0; i < config.getMinSize(); i++) {
-            objectQueue.put(new Poolable<>(objectFactory.create(), partition));
+            objectQueue.put(new Poolable<>(objectFactory.create(), pool, partition));
         }
         totalCount = config.getMinSize();
     }
@@ -36,7 +38,7 @@ public class ObjectPoolPartition<T> {
         }
         try {
             for (int i = 0; i < delta; i++) {
-                objectQueue.put(new Poolable<>(objectFactory.create(), partition));
+                objectQueue.put(new Poolable<>(objectFactory.create(), pool, partition));
             }
             totalCount += delta;
             Log.debug("increase objects: count=", totalCount, ", queue size=", objectQueue.size());

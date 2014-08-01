@@ -6,11 +6,13 @@ package com.haiwanwan.common.objectpool;
 public class Poolable<T> {
 
     private final T object;
+    private ObjectPool<T> pool;
     private final int partition;
     private long lastAccessTs;
 
-    public Poolable(T t, int partition) {
+    public Poolable(T t, ObjectPool<T> pool, int partition) {
         this.object = t;
+        this.pool = pool;
         this.partition = partition;
     }
 
@@ -18,8 +20,16 @@ public class Poolable<T> {
         return object;
     }
 
+    public ObjectPool<T> getPool() {
+        return pool;
+    }
+
     public int getPartition() {
         return partition;
+    }
+
+    public void returnObject() {
+        pool.returnObject(this);
     }
 
     public long getLastAccessTs() {
@@ -29,5 +39,6 @@ public class Poolable<T> {
     public void setLastAccessTs(long lastAccessTs) {
         this.lastAccessTs = lastAccessTs;
     }
+
 
 }

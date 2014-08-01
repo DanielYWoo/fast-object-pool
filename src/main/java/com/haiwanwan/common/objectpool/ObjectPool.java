@@ -19,7 +19,7 @@ public class ObjectPool<T> {
         this.partitions = new ObjectPoolPartition[config.getPartitionSize()];
         try {
             for (int i = 0; i < config.getPartitionSize(); i++) {
-                partitions[i] = new ObjectPoolPartition<>(i, config, objectFactory);
+                partitions[i] = new ObjectPoolPartition<>(this, i, config, objectFactory);
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
