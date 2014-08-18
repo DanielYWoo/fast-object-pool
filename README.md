@@ -80,6 +80,6 @@ Maven dependency
         <dependency>
             <groupId>com.haiwanwan.common</groupId>
             <artifactId>fast-object-pool</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
 ```
