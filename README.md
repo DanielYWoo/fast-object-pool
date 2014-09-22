@@ -76,6 +76,7 @@ The famous mobile game 'Million Arthurs' has a web based chat feature, the chat 
 
 Maven dependency
 ---------------
+To use this project, simply add this to your pom.xml
 ```
         <dependency>
             <groupId>com.haiwanwan.common</groupId>
@@ -83,3 +84,6 @@ Maven dependency
             <version>1.0.2</version>
         </dependency>
 ```
+By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However SLF4j is supported, checkout this for more details: http://www.slf4j.org/legacy.html#jul-to-slf4j
+
+Apache commons-logging is not supported because: http://articles.qos.ch/thinkAgain.html
