@@ -66,6 +66,8 @@ public class ObjectPoolPartition<T> {
         long now = System.currentTimeMillis();
         Poolable<T> obj;
         while (delta-- > 0 && (obj = objectQueue.poll()) != null) {
+            // performance trade off: delta always decrease even if the queue is empty,
+            // so it could take several intervals to shrink the pool to the configured min value.
             Log.debug("obj=", obj, ", now-last=", now - obj.getLastAccessTs(), ", max idle=", config.getMaxIdleMilliseconds());
             if (now - obj.getLastAccessTs() > config.getMaxIdleMilliseconds()) {
                 decreaseObject(obj); // shrink the pool size if the object reaches max idle time

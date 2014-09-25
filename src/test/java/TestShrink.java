@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,6 +16,9 @@ public class TestShrink {
 
     @Test
     public void testShrink() throws InterruptedException {
+
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
+        Logger.getLogger("").setLevel(Level.ALL);
         PoolConfig config = new PoolConfig();
         config.setPartitionSize(2);
         config.setMaxSize(20);
@@ -59,7 +64,7 @@ public class TestShrink {
         System.out.println("scavenged, pool size=" + pool.getSize());
 
         // test return after shutdown
-        new Thread() {
+        Thread testThread = new Thread() {
             @Override
             public void run() {
                 Poolable<StringBuilder> obj = pool.borrowObject();
@@ -71,9 +76,11 @@ public class TestShrink {
                 pool.returnObject(obj);
                 System.out.println("pool size:" + pool.getSize());
             }
-        }.start();
-        Thread.sleep(1000);
+        };
+        testThread.start();
+        testThread.join();
         int removed = pool.shutdown(); // this will block 9 seconds
         assertEquals(4, removed);
+        System.out.println("All done");
     }
 }
