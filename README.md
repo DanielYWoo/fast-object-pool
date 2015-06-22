@@ -23,7 +23,7 @@ First of all you need to create a FOP config:
         config.setMinSize(5);
         config.setMaxIdleMilliseconds(60 * 1000 * 5);
 ```
-The code above means the pool will have at least 5*5=25 objects, at most 5*10=50 objects, if an object has not been used over 5 minutes it could be removed.
+The code above means the pool will have at least 5x5=25 objects, at most 5x10=50 objects, if an object has not been used over 5 minutes it could be removed.
 
 Then define how objects will be created and destroyed with ObjectFactory
 ```
