@@ -2,6 +2,7 @@ import com.haiwanwan.common.objectpool.ObjectFactory;
 import com.haiwanwan.common.objectpool.ObjectPool;
 import com.haiwanwan.common.objectpool.PoolConfig;
 import com.haiwanwan.common.objectpool.Poolable;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,12 +12,12 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestShrink {
+public class TestObjectPool {
 
+    private ObjectPool<StringBuilder> pool;
 
-    @Test
-    public void testShrink() throws InterruptedException {
-
+    @Before
+    public void init() {
         Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
         Logger.getLogger("").setLevel(Level.ALL);
         PoolConfig config = new PoolConfig();
@@ -41,8 +42,22 @@ public class TestShrink {
                 return true;
             }
         };
-        final ObjectPool pool = new ObjectPool(config, factory);
+        pool = new ObjectPool(config, factory);
+    }
 
+    @Test
+    public void testSimple() throws InterruptedException {
+        for (int i = 0; i < 100; i++) {
+            try (Poolable<StringBuilder> obj = pool.borrowObject()) {
+                obj.getObject().append("x");
+            }
+        }
+        System.out.println("pool size:" + pool.getSize());
+        assertEquals(4, pool.getSize());
+    }
+
+    @Test
+    public void testShrink() throws InterruptedException {
         List<Poolable<StringBuilder>> borrowed = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             System.out.println("test borrow");
