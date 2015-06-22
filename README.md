@@ -45,17 +45,12 @@ Then define how objects will be created and destroyed with ObjectFactory
 Now you can create your FOP pool
 ```
 ObjectPool pool = new ObjectPool(config, factory);
-Poolable<StringBuilder> obj = null;
-try {
-    obj = pool.borrowObject();
-    obj.getObject().append("x"); // do something
-} finally {
-    if (obj != null) {
-        pool.returnObject(obj);
-        // or obj.returnObject();
-    }
+Poolable<Connection> obj = null;
+try (obj = pool.borrowObject()) {
+    obj.getObject().sendPackets(somePackets);
 }
 ```
+Although Poolable.returnObject() and ObjectPool.returnObject(Poolable) are public but they are not encouraged to be used, Try-With-Resouce (AutoCloseable) is dead clean and less buggy (e,g. forget to return in the finally block, or incidently call returnObject() twice.).
 
 Shut it down
 ```
@@ -86,6 +81,6 @@ To use this project, simply add this to your pom.xml
             <version>1.0.2</version>
         </dependency>
 ```
-By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However SLF4j is supported, checkout this for more details: http://www.slf4j.org/legacy.html#jul-to-slf4j
+JDK 7+ is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However SLF4j is supported, checkout this for more details: http://www.slf4j.org/legacy.html#jul-to-slf4j
 
 Apache commons-logging is not supported because: http://articles.qos.ch/thinkAgain.html

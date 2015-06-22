@@ -2,8 +2,9 @@ package com.haiwanwan.common.objectpool;
 
 /**
  * @author Daniel
+ * AutoCloseable.close() is not idemponent, so don't close it multiple times!
  */
-public class Poolable<T> {
+public class Poolable<T> implements AutoCloseable {
 
     private final T object;
     private ObjectPool<T> pool;
@@ -40,5 +41,11 @@ public class Poolable<T> {
         this.lastAccessTs = lastAccessTs;
     }
 
-
+    /**
+     * This method is not idemponent, don't call it twice, which will return the object twice to the pool and cause severe problems.
+     */
+    @Override
+    public void close() {
+        this.returnObject();
+    }
 }
