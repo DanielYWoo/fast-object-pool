@@ -10,7 +10,7 @@ public class ObjectPool<T> {
     protected final PoolConfig config;
     protected final ObjectFactory<T> factory;
     protected final ObjectPoolPartition<T>[] partitions;
-    private final Scavenger scavenger;
+    private Scavenger scavenger;
     private volatile boolean shuttingDown;
 
     public ObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory) {
@@ -24,8 +24,10 @@ public class ObjectPool<T> {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        this.scavenger = new Scavenger();
-        this.scavenger.start();
+        if (config.getScavengeIntervalMilliseconds() > 0) {
+            this.scavenger = new Scavenger();
+            this.scavenger.start();
+        }
     }
 
     public Poolable<T> borrowObject() {
@@ -81,11 +83,6 @@ public class ObjectPool<T> {
         }
     }
 
-    public void close() {
-        shuttingDown = true;
-        //TODO: gracefully destroy all objects in the pool
-    }
-
     public int getSize() {
         int size = 0;
         for (ObjectPoolPartition<T> subPool : partitions) {
@@ -97,8 +94,10 @@ public class ObjectPool<T> {
     public synchronized int shutdown() throws InterruptedException {
         shuttingDown = true;
         int removed = 0;
-        scavenger.interrupt();
-        scavenger.join();
+        if (scavenger != null) {
+            scavenger.interrupt();
+            scavenger.join();
+        }
         for (ObjectPoolPartition<T> partition : partitions) {
             removed += partition.shutdown();
         }
@@ -116,7 +115,7 @@ public class ObjectPool<T> {
                     partition = ++partition % config.getPartitionSize();
                     Log.debug("scavenge sub pool ",  partition);
                     partitions[partition].scavenge();
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }

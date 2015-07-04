@@ -2,7 +2,6 @@ package com.haiwanwan.common.objectpool;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Logger;
 
 /**
  * @author Daniel

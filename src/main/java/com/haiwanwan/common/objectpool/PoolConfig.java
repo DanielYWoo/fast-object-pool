@@ -59,6 +59,10 @@ public class PoolConfig {
         return scavengeIntervalMilliseconds;
     }
 
+    /**
+     * @param scavengeIntervalMilliseconds set it to zero if you don't want to automatically shrink your pool.
+     *                                     This is useful for fixed-size pool, or pools don't increase too much.
+     */
     public void setScavengeIntervalMilliseconds(int scavengeIntervalMilliseconds) {
         this.scavengeIntervalMilliseconds = scavengeIntervalMilliseconds;
     }
