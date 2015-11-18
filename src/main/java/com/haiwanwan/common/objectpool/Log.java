@@ -21,7 +21,7 @@ public class Log {
         ex.printStackTrace(new PrintWriter(writer));
         sb.append(writer.toString());
         return sb.toString();
-}
+    }
 
     private static String getString(Object ... objects) {
         if (objects.length > 1) {
