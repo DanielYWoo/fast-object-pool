@@ -77,7 +77,9 @@ public class ObjectPool<T> {
         ObjectPoolPartition<T> subPool = this.partitions[obj.getPartition()];
         try {
             subPool.getObjectQueue().put(obj);
-            Log.debug("return object: queue size:" + subPool.getObjectQueue().size() + ", partition id:" + obj.getPartition());
+            if (Log.isDebug())
+                Log.debug("return object: queue size:", subPool.getObjectQueue().size(),
+                    ", partition id:", obj.getPartition());
         } catch (InterruptedException e) {
             throw new RuntimeException(e); // impossible for now, unless there is a bug, e,g. borrow once but return twice.
         }

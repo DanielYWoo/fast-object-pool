@@ -23,6 +23,10 @@ public class Log {
         return sb.toString();
     }
 
+    public static boolean isDebug() {
+        return logger.isLoggable(Level.FINE);
+    }
+
     private static String getString(Object ... objects) {
         if (objects.length > 1) {
             StringBuilder sb = new StringBuilder();

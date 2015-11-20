@@ -40,7 +40,8 @@ public class ObjectPoolPartition<T> {
                 objectQueue.put(new Poolable<>(objectFactory.create(), pool, partition));
             }
             totalCount += delta;
-            Log.debug("increase objects: count=", totalCount, ", queue size=", objectQueue.size());
+            if (Log.isDebug())
+                Log.debug("increase objects: count=", totalCount, ", queue size=", objectQueue.size());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -67,7 +68,9 @@ public class ObjectPoolPartition<T> {
         while (delta-- > 0 && (obj = objectQueue.poll()) != null) {
             // performance trade off: delta always decrease even if the queue is empty,
             // so it could take several intervals to shrink the pool to the configured min value.
-            Log.debug("obj=", obj, ", now-last=", now - obj.getLastAccessTs(), ", max idle=", config.getMaxIdleMilliseconds());
+            if (Log.isDebug())
+                Log.debug("obj=", obj, ", now-last=", now - obj.getLastAccessTs(), ", max idle=",
+                    config.getMaxIdleMilliseconds());
             if (now - obj.getLastAccessTs() > config.getMaxIdleMilliseconds()) {
                 decreaseObject(obj); // shrink the pool size if the object reaches max idle time
                 removed++;
