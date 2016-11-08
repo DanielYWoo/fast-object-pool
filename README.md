@@ -76,9 +76,9 @@ Maven dependency
 To use this project, simply add this to your pom.xml
 ```
         <dependency>
-            <groupId>com.haiwanwan.common</groupId>
+            <groupId>cn.danielw</groupId>
             <artifactId>fast-object-pool</artifactId>
-            <version>1.0.3</version>
+            <version>2.0.0</version>
         </dependency>
 ```
 JDK 7+ is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However SLF4j is supported, checkout this for more details: http://www.slf4j.org/legacy.html#jul-to-slf4j
