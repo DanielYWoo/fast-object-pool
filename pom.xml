@@ -4,10 +4,10 @@
 	<name>Fast Object Pool</name>
 	<url>https://github.com/DanielYWoo/fast-object-pool</url>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.haiwanwan.common</groupId>
+	<groupId>cn.danielw</groupId>
 	<artifactId>fast-object-pool</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.4</version>
+	<version>2.0.0</version>
 	<description>An extremely fast object pool with zero dependencies</description>
 
 	<developers>
@@ -30,6 +30,17 @@
 		<system>Github</system>
 		<url>https://github.com/DanielYWoo/fast-object-pool/issues?state=open</url>
 	</issueManagement>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
@@ -59,18 +70,19 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>7</source>
-					<target>7</target>
+					<source>8</source>
+					<target>8</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
 						<goals>
-							<goal>jar</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -78,6 +90,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -87,10 +100,10 @@
 					</execution>
 				</executions>
 			</plugin>
-<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -101,7 +114,17 @@
 					</execution>
 				</executions>
 			</plugin>
--->
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

@@ -1,4 +1,4 @@
-package com.haiwanwan.common.objectpool;
+package cn.danielw.fop;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

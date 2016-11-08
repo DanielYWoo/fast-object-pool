@@ -1,19 +1,17 @@
-package com.haiwanwan.common.objectpool;
+package cn.danielw.fop;
 
 /**
  * @author Daniel
  */
 public class PoolConfig {
 
-    public static final int DEFAULT_MIN_SIZE = 5;
-    public static final int DEFAULT_MAX_SIZE = 20;
-
     private int maxWaitMilliseconds = 5000; // when pool is full, wait at most 5 seconds, then throw an exception
     private int maxIdleMilliseconds = 300000; // objects idle for 5 minutes will be destroyed to shrink the pool size
-    private int minSize = DEFAULT_MIN_SIZE;
-    private int maxSize = DEFAULT_MAX_SIZE;
+    private int minSize = 5;
+    private int maxSize = 20;
     private int partitionSize = 4;
     private int scavengeIntervalMilliseconds = 1000 * 60 * 2;
+    private double scavengeRatio = 0.5; // to avoid to clean up all connections in the pool at the same time
 
     public int getMaxWaitMilliseconds() {
         return maxWaitMilliseconds;
@@ -65,5 +63,20 @@ public class PoolConfig {
      */
     public void setScavengeIntervalMilliseconds(int scavengeIntervalMilliseconds) {
         this.scavengeIntervalMilliseconds = scavengeIntervalMilliseconds;
+    }
+
+    public double getScavengeRatio() {
+        return scavengeRatio;
+    }
+
+    /**
+     *  Each time we shrink a pool, we only scavenge some of the objects to avoid an empty pool
+     * @param scavengeRatio must be a double between (0, 1]
+     */
+    public void setScavengeRatio(double scavengeRatio) {
+        if (scavengeRatio <= 0 || scavengeRatio > 1) {
+            throw new IllegalArgumentException("Invalid scavenge ratio: " + scavengeRatio);
+        }
+        this.scavengeRatio = scavengeRatio;
     }
 }

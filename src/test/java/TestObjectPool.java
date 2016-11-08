@@ -1,8 +1,7 @@
-import com.haiwanwan.common.objectpool.ObjectFactory;
-import com.haiwanwan.common.objectpool.ObjectPool;
-import com.haiwanwan.common.objectpool.PoolConfig;
-import com.haiwanwan.common.objectpool.Poolable;
-import org.junit.Before;
+import cn.danielw.fop.ObjectFactory;
+import cn.danielw.fop.ObjectPool;
+import cn.danielw.fop.PoolConfig;
+import cn.danielw.fop.Poolable;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,10 +13,8 @@ import static org.junit.Assert.assertEquals;
 
 public class TestObjectPool {
 
-    private ObjectPool<StringBuilder> pool;
 
-    @Before
-    public void init() {
+    public ObjectPool init(double scavengeRatio) {
         Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
         Logger.getLogger("").setLevel(Level.ALL);
         PoolConfig config = new PoolConfig();
@@ -26,6 +23,7 @@ public class TestObjectPool {
         config.setMinSize(2);
         config.setMaxIdleMilliseconds(5000);
         config.setScavengeIntervalMilliseconds(5000);
+        config.setScavengeRatio(scavengeRatio);
 
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
             @Override
@@ -42,11 +40,12 @@ public class TestObjectPool {
                 return true;
             }
         };
-        pool = new ObjectPool(config, factory);
+        return new ObjectPool(config, factory);
     }
 
     @Test
     public void testSimple() throws InterruptedException {
+        ObjectPool pool = init(1.0);
         for (int i = 0; i < 100; i++) {
             try (Poolable<StringBuilder> obj = pool.borrowObject()) {
                 obj.getObject().append("x");
@@ -58,6 +57,7 @@ public class TestObjectPool {
 
     @Test
     public void testShrink() throws InterruptedException {
+        final ObjectPool pool = init(1.0);
         List<Poolable<StringBuilder>> borrowed = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             System.out.println("test borrow");
@@ -98,4 +98,5 @@ public class TestObjectPool {
         assertEquals(4, removed);
         System.out.println("All done");
     }
+
 }

@@ -1,7 +1,8 @@
-package com.haiwanwan.common.objectpool;
+package cn.danielw.fop;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Daniel
@@ -71,7 +72,8 @@ public class ObjectPoolPartition<T> {
             if (Log.isDebug())
                 Log.debug("obj=", obj, ", now-last=", now - obj.getLastAccessTs(), ", max idle=",
                     config.getMaxIdleMilliseconds());
-            if (now - obj.getLastAccessTs() > config.getMaxIdleMilliseconds()) {
+            if (now - obj.getLastAccessTs() > config.getMaxIdleMilliseconds() &&
+                    ThreadLocalRandom.current().nextDouble(1) < config.getScavengeRatio()) {
                 decreaseObject(obj); // shrink the pool size if the object reaches max idle time
                 removed++;
             } else {

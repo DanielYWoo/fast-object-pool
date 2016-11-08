@@ -1,4 +1,4 @@
-package com.haiwanwan.common.objectpool;
+package cn.danielw.fop;
 
 /**
  * @author Daniel
@@ -15,6 +15,7 @@ public class Poolable<T> implements AutoCloseable {
         this.object = t;
         this.pool = pool;
         this.partition = partition;
+        this.lastAccessTs = System.currentTimeMillis();
     }
 
     public T getObject() {
