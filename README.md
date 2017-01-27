@@ -33,16 +33,14 @@ Then define how objects will be created and destroyed with ObjectFactory
 
 ```java
 ObjectFactory<StringBuilder> factory = new ObjectFactory<>() {
-    @Override
-    public StringBuilder create() {
-	return new StringBuilder();
+    @Override public StringBuilder create() {
+        return new StringBuilder(); // create your object here
     }
-    @Override
-    public void destroy(StringBuilder o) {
+    @Override public void destroy(StringBuilder o) {
+        // clean up and release resources
     }
-    @Override
-    public boolean validate(StringBuilder o) {
-	return true;
+    @Override public boolean validate(StringBuilder o) {
+        return true; // validate your object here
     }
 };
 ```
@@ -53,8 +51,7 @@ Now you can create your FOP pool and just use it
 
 ```java
 ObjectPool pool = new ObjectPool(config, factory);
-Poolable<Connection> obj = null;
-try (obj = pool.borrowObject()) {
+try (Poolable<Connection> obj = pool.borrowObject()) {
     obj.getObject().sendPackets(somePackets);
 }
 ```
