@@ -8,10 +8,9 @@ Why yet another object pool
 --------------
 
 FOP is implemented with partitions to avoid thread contention, the performance test shows it's much faster than Apache commons-pool. This project is not to replace Apache commons-pool, this project does not provide rich features like commons-pool, this project mainly aims on:
-1). Zero dependency
-2). High throughput with many concurrent requests
-3). Less code so everybody can read it and understand it.
-
+1. Zero dependency
+2. High throughput with many concurrent requests
+3. Less code so everybody can read it and understand it.
 
 Configuration
 -------------
@@ -42,7 +41,7 @@ Then define how objects will be created and destroyed with ObjectFactory
         };
 ```
 
-Now you can create your FOP pool
+Now you can create your FOP pool and just use it
 ```
 ObjectPool pool = new ObjectPool(config, factory);
 Poolable<Connection> obj = null;
@@ -50,8 +49,6 @@ try (obj = pool.borrowObject()) {
     obj.getObject().sendPackets(somePackets);
 }
 ```
-Although Poolable.returnObject() and ObjectPool.returnObject(Poolable) are public but they are not encouraged to be used, Try-With-Resouce (AutoCloseable) is dead clean and less buggy (e,g. forget to return in the finally block, or incidently call returnObject() twice.).
-
 Shut it down
 ```
 pool.shutdown();
@@ -59,7 +56,7 @@ pool.shutdown();
 
 How it works
 --------------
-The pool will create multiple partitions, in most cases a thread always access a specified partition, so the more partitions you have, the less probability you run into thread contentions. Each partition has a blocking queue (JCL wait-free CAS/LLSC based) to hold poolable objects; to borrow an object, the first object in the queue will be removed; returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments design and BoneCP connection pool's partition design.
+The pool will create multiple partitions, in most cases a thread always access a specified partition, so the more partitions you have, the less probability you run into thread contentions. Each partition has a blocking queue (JCL wait-free CAS/LLSC based) to hold poolable objects; to borrow an object, the first object in the queue will be removed; returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without a problem. In the next major version, I am considering using disruptor to make it even faster. Any suggestion is welcomed.
 
 
 How fast it is
@@ -84,3 +81,4 @@ To use this project, simply add this to your pom.xml
 JDK 7+ is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However SLF4j is supported, checkout this for more details: http://www.slf4j.org/legacy.html#jul-to-slf4j
 
 Apache commons-logging is not supported because: http://articles.qos.ch/thinkAgain.html
+
