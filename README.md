@@ -18,11 +18,11 @@ First of all you need to create a FOP config:
 
 
 ```java
-        PoolConfig config = new PoolConfig();
-        config.setPartitionSize(5);
-        config.setMaxSize(10);
-        config.setMinSize(5);
-        config.setMaxIdleMilliseconds(60 * 1000 * 5);
+PoolConfig config = new PoolConfig();
+config.setPartitionSize(5);
+config.setMaxSize(10);
+config.setMinSize(5);
+config.setMaxIdleMilliseconds(60 * 1000 * 5);
 ```
 
 
@@ -32,19 +32,19 @@ Then define how objects will be created and destroyed with ObjectFactory
 
 
 ```java
-        ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
-            @Override
-            public StringBuilder create() {
-                return new StringBuilder();
-            }
-            @Override
-            public void destroy(StringBuilder o) {
-            }
-            @Override
-            public boolean validate(StringBuilder o) {
-                return true;
-            }
-        };
+ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
+    @Override
+    public StringBuilder create() {
+	return new StringBuilder();
+    }
+    @Override
+    public void destroy(StringBuilder o) {
+    }
+    @Override
+    public boolean validate(StringBuilder o) {
+	return true;
+    }
+};
 ```
 
 
