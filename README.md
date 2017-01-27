@@ -32,7 +32,7 @@ Then define how objects will be created and destroyed with ObjectFactory
 
 
 ```java
-ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
+ObjectFactory<StringBuilder> factory = new ObjectFactory<>() {
     @Override
     public StringBuilder create() {
 	return new StringBuilder();
