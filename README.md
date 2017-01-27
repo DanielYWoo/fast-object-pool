@@ -88,11 +88,11 @@ To use this project, simply add this to your pom.xml
 
 
 ```xml
-        <dependency>
-            <groupId>cn.danielw</groupId>
-            <artifactId>fast-object-pool</artifactId>
-            <version>2.0.0</version>
-        </dependency>
+<dependency>
+    <groupId>cn.danielw</groupId>
+    <artifactId>fast-object-pool</artifactId>
+    <version>2.0.0</version>
+</dependency>
 ```
 
 
