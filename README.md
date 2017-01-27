@@ -15,7 +15,7 @@ FOP is implemented with partitions to avoid thread contention, the performance t
 Configuration
 -------------
 First of all you need to create a FOP config:
-```
+```java
         PoolConfig config = new PoolConfig();
         config.setPartitionSize(5);
         config.setMaxSize(10);
@@ -25,7 +25,7 @@ First of all you need to create a FOP config:
 The code above means the pool will have at least 5x5=25 objects, at most 5x10=50 objects, if an object has not been used over 5 minutes it could be removed.
 
 Then define how objects will be created and destroyed with ObjectFactory
-```
+```java
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
             @Override
             public StringBuilder create() {
@@ -42,7 +42,7 @@ Then define how objects will be created and destroyed with ObjectFactory
 ```
 
 Now you can create your FOP pool and just use it
-```
+```java
 ObjectPool pool = new ObjectPool(config, factory);
 Poolable<Connection> obj = null;
 try (obj = pool.borrowObject()) {
@@ -50,7 +50,7 @@ try (obj = pool.borrowObject()) {
 }
 ```
 Shut it down
-```
+```java
 pool.shutdown();
 ```
 
@@ -71,7 +71,7 @@ I believe Commons-Pool 2.x will be much faster since they rewriten everything. U
 Maven dependency
 ---------------
 To use this project, simply add this to your pom.xml
-```
+```xml
         <dependency>
             <groupId>cn.danielw</groupId>
             <artifactId>fast-object-pool</artifactId>
