@@ -67,7 +67,7 @@ pool.shutdown();
 
 How it works
 --------------
-The pool will create multiple partitions, in most cases a thread always access a specified partition, so the more partitions you have, the less probability you run into thread contentions. Each partition has a blocking queue (JCL wait-free CAS/LLSC based) to hold poolable objects; to borrow an object, the first object in the queue will be removed; returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without a problem. In the next major version, I am considering using disruptor to make it even faster. Any suggestion is welcomed.
+The pool will create multiple partitions, in most cases a thread always access a specified partition, so the more partitions you have, the less probability you run into thread contentions. Each partition has a blocking queue (JCL wait-free CAS/LLSC based) to hold poolable objects; to borrow an object, the first object in the queue will be removed; returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without a problem. In the next major version, I am considering using disruptor to make it even faster. All suggestions are welcome.
 
 
 How fast it is
