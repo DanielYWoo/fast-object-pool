@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/DanielYWoo/fast-object-pool.svg?branch=master)](https://travis-ci.org/DanielYWoo/fast-object-pool)
+[![Build Status](https://travis-ci.org/DanielYWoo/fast-object-pool.svg?branch=1.0.0)](https://travis-ci.org/DanielYWoo/fast-object-pool)
 
 fast-object-pool
 ================
