@@ -17,40 +17,45 @@ public class PoolConfig {
         return maxWaitMilliseconds;
     }
 
-    public void setMaxWaitMilliseconds(int maxWaitMilliseconds) {
+    public PoolConfig setMaxWaitMilliseconds(int maxWaitMilliseconds) {
         this.maxWaitMilliseconds = maxWaitMilliseconds;
+        return this;
     }
 
     public int getMinSize() {
         return minSize;
     }
 
-    public void setMinSize(int minSize) {
+    public PoolConfig setMinSize(int minSize) {
         this.minSize = minSize;
+        return this;
     }
 
     public int getMaxSize() {
         return maxSize;
     }
 
-    public void setMaxSize(int maxSize) {
+    public PoolConfig setMaxSize(int maxSize) {
         this.maxSize = maxSize;
+        return this;
     }
 
     public int getMaxIdleMilliseconds() {
         return maxIdleMilliseconds;
     }
 
-    public void setMaxIdleMilliseconds(int maxIdleMilliseconds) {
+    public PoolConfig setMaxIdleMilliseconds(int maxIdleMilliseconds) {
         this.maxIdleMilliseconds = maxIdleMilliseconds;
+        return this;
     }
 
     public int getPartitionSize() {
         return partitionSize;
     }
 
-    public void setPartitionSize(int partitionSize) {
+    public PoolConfig setPartitionSize(int partitionSize) {
         this.partitionSize = partitionSize;
+        return this;
     }
 
     public int getScavengeIntervalMilliseconds() {
@@ -61,8 +66,9 @@ public class PoolConfig {
      * @param scavengeIntervalMilliseconds set it to zero if you don't want to automatically shrink your pool.
      *                                     This is useful for fixed-size pool, or pools don't increase too much.
      */
-    public void setScavengeIntervalMilliseconds(int scavengeIntervalMilliseconds) {
+    public PoolConfig setScavengeIntervalMilliseconds(int scavengeIntervalMilliseconds) {
         this.scavengeIntervalMilliseconds = scavengeIntervalMilliseconds;
+        return this;
     }
 
     public double getScavengeRatio() {
@@ -73,10 +79,11 @@ public class PoolConfig {
      *  Each time we shrink a pool, we only scavenge some of the objects to avoid an empty pool
      * @param scavengeRatio must be a double between (0, 1]
      */
-    public void setScavengeRatio(double scavengeRatio) {
+    public PoolConfig setScavengeRatio(double scavengeRatio) {
         if (scavengeRatio <= 0 || scavengeRatio > 1) {
             throw new IllegalArgumentException("Invalid scavenge ratio: " + scavengeRatio);
         }
         this.scavengeRatio = scavengeRatio;
+        return this;
     }
 }
