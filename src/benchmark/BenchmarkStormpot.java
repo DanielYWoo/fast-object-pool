@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class BenchmarkStormpot extends Benchmark {
 
+
     static class MyPoolable implements stormpot.Poolable {
 
         private final Slot slot;
@@ -35,6 +36,7 @@ public class BenchmarkStormpot extends Benchmark {
         Config<MyPoolable> config = new Config<>().setAllocator(new Allocator<MyPoolable>() {
             @Override
             public MyPoolable allocate(Slot slot) throws Exception {
+                created.incrementAndGet();
                 return new MyPoolable(slot);
             }
 

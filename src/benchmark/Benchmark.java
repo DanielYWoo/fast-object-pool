@@ -1,5 +1,6 @@
 import java.text.DecimalFormat;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Daniel
@@ -9,6 +10,7 @@ public class Benchmark {
     final private int workerCount;
     final private int loop;
     final CountDownLatch latch;
+    final AtomicLong created = new AtomicLong(0);
     static double[] statsAvgRespTime;
     static double[] statsAvgBorrow;
     static double[] statsAvgReturn;
@@ -46,6 +48,7 @@ public class Benchmark {
         }
         System.out.println("Average Return Time:" + new DecimalFormat("0.0000").format(stats / workerCount));
         System.out.println("Average Throughput Per Second:" + new DecimalFormat("0").format(((double) loop * workerCount) / (t2 - t1) ) + "k");
+        System.out.println("Objects created:" + created.get());
     }
 
     public static void main(String[] args) throws Exception {
@@ -53,6 +56,7 @@ public class Benchmark {
         System.out.println("-----------warm up------------");
         testFOP(50,  1000);
         testStormpot(50,  1000);
+        testFurious(50,  1000);
         testCommon(50,  1000);
 
         System.out.println("-----------fast object pool------------");
@@ -69,7 +73,7 @@ public class Benchmark {
         testFOP(550, 10000);
         testFOP(600, 10000);
 
-        System.out.println("-----------storm pot object pool------------");
+        System.out.println("-----------stormpot object pool------------");
         testStormpot(50,  50000);
         testStormpot(100, 50000);
         testStormpot(150, 50000);
@@ -82,6 +86,20 @@ public class Benchmark {
         testStormpot(500, 10000);
         testStormpot(550, 10000);
         testStormpot(600, 10000);
+
+        System.out.println("-----------furious object pool------------");
+        testFurious(50,  50000);
+        testFurious(100, 50000);
+        testFurious(150, 50000);
+        testFurious(200, 30000);
+        testFurious(250, 30000);
+        testFurious(300, 30000);
+        testFurious(350, 20000);
+        testFurious(400, 20000);
+        testFurious(450, 20000);
+        testFurious(500, 10000);
+        testFurious(550, 10000);
+        testFurious(600, 10000);
 
         System.out.println("------------Apache commons pool-----------");
         // too slow, so less loops
@@ -109,6 +127,11 @@ public class Benchmark {
 
     private static void testStormpot(int workerCount, int loop) throws InterruptedException {
         new BenchmarkStormpot(workerCount, loop);
+        cleanup();
+    }
+
+    private static void testFurious(int workerCount, int loop) throws InterruptedException {
+        new BenchmarkFurious(workerCount, loop);
         cleanup();
     }
 

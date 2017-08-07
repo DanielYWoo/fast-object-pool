@@ -22,6 +22,7 @@ public class BenchmarkFastObjectPool extends Benchmark {
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
             @Override
             public StringBuilder create() {
+                created.incrementAndGet();
                 return new StringBuilder();
             }
             @Override

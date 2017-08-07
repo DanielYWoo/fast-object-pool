@@ -12,18 +12,19 @@ public class BenchmarkCommons extends Benchmark {
 
     public BenchmarkCommons(int workerCount, int loop) throws Exception {
         super(workerCount, loop);
-        GenericObjectPool pool = new GenericObjectPool(new PooledObjectFactory() {
-            @Override public PooledObject makeObject() throws Exception {
-                return new DefaultPooledObject(new StringBuilder());
+        GenericObjectPool<StringBuilder> pool = new GenericObjectPool<>(new PooledObjectFactory<StringBuilder>() {
+            @Override public PooledObject<StringBuilder> makeObject() throws Exception {
+                created.incrementAndGet();
+                return new DefaultPooledObject<>(new StringBuilder());
             }
 
-            @Override public void destroyObject(PooledObject pooledObject) throws Exception { }
+            @Override public void destroyObject(PooledObject<StringBuilder> pooledObject) throws Exception { }
 
-            @Override public boolean validateObject(PooledObject pooledObject) { return false; }
+            @Override public boolean validateObject(PooledObject<StringBuilder> pooledObject) { return false; }
 
-            @Override public void activateObject(PooledObject pooledObject) throws Exception { }
+            @Override public void activateObject(PooledObject<StringBuilder> pooledObject) throws Exception { }
 
-            @Override public void passivateObject(PooledObject pooledObject) throws Exception { }
+            @Override public void passivateObject(PooledObject<StringBuilder> pooledObject) throws Exception { }
         });
         pool.setMinIdle(256);
         pool.setMaxIdle(256);

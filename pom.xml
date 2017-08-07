@@ -64,6 +64,12 @@
 			<scope>test</scope> <!-- benchmark only -->
 			<version>2.4</version>
 		</dependency>
+		<dependency>
+			<groupId>nf.fr.eraasoft</groupId>
+			<artifactId>objectpool</artifactId>
+			<scope>test</scope> <!-- benchmark only -->
+			<version>1.1.2</version>
+		</dependency>
 	</dependencies>
 
 	<scm>
