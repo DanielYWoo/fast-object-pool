@@ -1,13 +1,12 @@
 import stormpot.*;
 
-import java.text.DecimalFormat;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Daniel
  */
-public class BenchmarkStormpot {
+public class BenchmarkStormpot extends Benchmark {
 
     static class MyPoolable implements stormpot.Poolable {
 
@@ -27,11 +26,9 @@ public class BenchmarkStormpot {
         }
     }
 
-    private static double[] statsAvgRespTime;
 
     public BenchmarkStormpot(int workerCount, int loop) throws InterruptedException {
-        statsAvgRespTime = new double[workerCount];
-        CountDownLatch latch = new CountDownLatch(workerCount);
+        super(workerCount, loop);
 
         Config<MyPoolable> config = new Config<>().setAllocator(new Allocator<MyPoolable>() {
             @Override
@@ -54,62 +51,36 @@ public class BenchmarkStormpot {
         });
         */
         Pool<MyPoolable> pool = new BlazePool<>(config);
-
-
         Worker[] workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(i, pool, latch, loop);
+            workers[i] = new Worker(this, i, latch, loop, pool);
         }
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < workerCount; i++) {
-            workers[i].start();
-        }
-        latch.await();
-        long t2 = System.currentTimeMillis();
-        double stats = 0;
-        for (int i = 0; i < workerCount; i++) {
-            stats += statsAvgRespTime[i];
-        }
-        System.out.println("Average Response Time:" + new DecimalFormat("0").format(stats / workerCount));
-        System.out.println("Average Througput Per Second:" + new DecimalFormat("0").format(( (double) loop * workerCount * 1000 ) / (t2 - t1) ));
+        testAndPrint(workers);
     }
 
-    private static class Worker extends Thread {
+    private static class Worker extends BaseWorker {
 
         private static final Timeout TIMEOUT = new Timeout(1, TimeUnit.HOURS);
-        private final int id;
         private final Pool<MyPoolable> pool;
-        private final CountDownLatch latch;
-        private final int loop;
 
-        public Worker(int id, Pool<MyPoolable> pool, CountDownLatch latch, int loop) {
-            this.id = id;
+        public Worker(Benchmark benchmark, int id, CountDownLatch latch, int loop, Pool<MyPoolable> pool) {
+            super(benchmark, id, latch, loop);
             this.pool = pool;
-            this.latch = latch;
-            this.loop = loop;
         }
 
-        @Override public void run() {
-            long t1 = System.currentTimeMillis();
-            for (int i = 0; i < loop; i++) {
-                MyPoolable obj = null;
-                try {
-                    obj = pool.claim(TIMEOUT);
-                    // todo: check NPE
-                    obj.getTest().append("x");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (obj != null) {
-                        obj.release();
-                    }
+        @Override public void doSomething() {
+            MyPoolable obj = null;
+            try {
+                obj = pool.claim(TIMEOUT);
+                // todo: check NPE
+                obj.getTest().append("x");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                if (obj != null) {
+                    obj.release();
                 }
             }
-            long t2 = System.currentTimeMillis();
-            synchronized (statsAvgRespTime) {
-                statsAvgRespTime[id] =  ((double) (t2 - t1)) / loop;
-            }
-            latch.countDown();
         }
     }
 }
