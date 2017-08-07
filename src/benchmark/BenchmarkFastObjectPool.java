@@ -14,9 +14,9 @@ public class BenchmarkFastObjectPool extends Benchmark {
     public BenchmarkFastObjectPool(int workerCount, int loop) throws InterruptedException {
         super(workerCount, loop);
         PoolConfig config = new PoolConfig();
-        config.setPartitionSize(5);
-        config.setMaxSize(10);
-        config.setMinSize(5);
+        config.setPartitionSize(16);
+        config.setMaxSize(16);
+        config.setMinSize(16);
         config.setMaxIdleMilliseconds(60 * 1000 * 5);
 
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
@@ -44,7 +44,7 @@ public class BenchmarkFastObjectPool extends Benchmark {
 
         private final ObjectPool<StringBuilder> pool;
 
-        public Worker(Benchmark benchmark, int id, CountDownLatch latch, int loop, ObjectPool<StringBuilder> pool) {
+        public Worker(Benchmark benchmark, int id, CountDownLatch latch, long loop, ObjectPool<StringBuilder> pool) {
             super(benchmark, id, latch, loop);
             this.pool = pool;
         }

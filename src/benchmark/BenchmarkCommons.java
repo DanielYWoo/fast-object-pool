@@ -25,9 +25,9 @@ public class BenchmarkCommons extends Benchmark {
 
             @Override public void passivateObject(PooledObject pooledObject) throws Exception { }
         });
-        pool.setMinIdle(25);
-        pool.setMaxIdle(50);
-        pool.setMaxTotal(50);
+        pool.setMinIdle(256);
+        pool.setMaxIdle(256);
+        pool.setMaxTotal(256);
         pool.setMinEvictableIdleTimeMillis(60 * 1000 * 5L);
 
         Worker[] workers = new Worker[workerCount];

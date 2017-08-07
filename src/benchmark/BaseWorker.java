@@ -5,11 +5,11 @@ public abstract class BaseWorker extends Thread {
     protected final Benchmark benchmark;
     protected final int id;
     protected final CountDownLatch latch;
-    protected final int loop;
+    protected final long loop;
     protected long tb = 0;
     protected long tr = 0;
 
-    public BaseWorker(Benchmark benchmark, int id, CountDownLatch latch, int loop) {
+    public BaseWorker(Benchmark benchmark, int id, CountDownLatch latch, long loop) {
         this.benchmark = benchmark;
         this.id = id;
         this.latch = latch;

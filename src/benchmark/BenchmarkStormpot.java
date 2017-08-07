@@ -10,10 +10,12 @@ public class BenchmarkStormpot extends Benchmark {
 
     static class MyPoolable implements stormpot.Poolable {
 
-        private StringBuilder test;
+        private final Slot slot;
+        private final StringBuilder test;
 
-        public MyPoolable() {
+        public MyPoolable(Slot slot) {
             test = new StringBuilder();
+            this.slot = slot;
         }
 
         public StringBuilder getTest() {
@@ -22,7 +24,7 @@ public class BenchmarkStormpot extends Benchmark {
 
         @Override
         public void release() {
-
+            slot.release(this);
         }
     }
 
@@ -33,14 +35,14 @@ public class BenchmarkStormpot extends Benchmark {
         Config<MyPoolable> config = new Config<>().setAllocator(new Allocator<MyPoolable>() {
             @Override
             public MyPoolable allocate(Slot slot) throws Exception {
-                return new MyPoolable();
+                return new MyPoolable(slot);
             }
 
             @Override
             public void deallocate(MyPoolable x) throws Exception {
 
             }
-        }).setSize(50);
+        }).setSize(256);
         /*
         config.setExpiration(new Expiration<MyPoolable>() {
             @Override
