@@ -1,5 +1,8 @@
 import stormpot.*;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -8,6 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class BenchmarkStormpot extends Benchmark {
 
+    private static final Set<Slot> slots = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     static class MyPoolable implements stormpot.Poolable {
 
@@ -17,6 +21,7 @@ public class BenchmarkStormpot extends Benchmark {
         public MyPoolable(Slot slot) {
             test = new StringBuilder();
             this.slot = slot;
+            slots.add(slot);
         }
 
         public StringBuilder getTest() {
@@ -60,6 +65,7 @@ public class BenchmarkStormpot extends Benchmark {
             workers[i] = new Worker(this, i, latch, loop, pool);
         }
         testAndPrint(workers);
+        System.out.println("slots:" + slots.size());
     }
 
     private static class Worker extends BaseWorker {

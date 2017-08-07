@@ -33,7 +33,7 @@ public class BenchmarkFastObjectPool extends Benchmark {
                 return true;
             }
         };
-        ObjectPool pool = new ObjectPool(config, factory);
+        ObjectPool<StringBuilder> pool = new ObjectPool<>(config, factory);
         Worker[] workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
             workers[i] = new Worker(this, i, latch, loop, pool);
