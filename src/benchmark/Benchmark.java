@@ -7,6 +7,7 @@ public class Benchmark {
 
         System.out.println("-----------warm up------------");
         new BenchmarkFastObjectPool(50,  1000);
+        new BenchmarkStormpot(50,  1000);
         new BenchmarkCommons(50,  1000);
 
         System.out.println("-----------fast object pool------------");
@@ -22,6 +23,21 @@ public class Benchmark {
         new BenchmarkFastObjectPool(500, 10000);
         new BenchmarkFastObjectPool(550, 10000);
         new BenchmarkFastObjectPool(600, 10000);
+
+        System.out.println("-----------storm pot object pool------------");
+        new BenchmarkStormpot(50,  50000);
+        new BenchmarkStormpot(100, 50000);
+        new BenchmarkStormpot(150, 50000);
+        new BenchmarkStormpot(200, 30000);
+        new BenchmarkStormpot(250, 30000);
+        new BenchmarkStormpot(300, 30000);
+        new BenchmarkStormpot(350, 20000);
+        new BenchmarkStormpot(400, 20000);
+        new BenchmarkStormpot(450, 20000);
+        new BenchmarkStormpot(500, 10000);
+        new BenchmarkStormpot(550, 10000);
+        new BenchmarkStormpot(600, 10000);
+
 
         System.out.println("------------Apache commons pool-----------");
         // too slow, so less loops

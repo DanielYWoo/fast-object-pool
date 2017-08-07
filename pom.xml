@@ -58,6 +58,12 @@
             <scope>test</scope> <!-- benchmark only -->
             <version>2.2</version>
         </dependency>
+		<dependency>
+			<groupId>com.github.chrisvest</groupId>
+			<artifactId>stormpot</artifactId>
+			<scope>test</scope> <!-- benchmark only -->
+			<version>2.4</version>
+		</dependency>
 	</dependencies>
 
 	<scm>
