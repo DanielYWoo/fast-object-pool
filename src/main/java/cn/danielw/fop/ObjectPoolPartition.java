@@ -1,6 +1,5 @@
 package cn.danielw.fop;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,14 +15,17 @@ public class ObjectPoolPartition<T> {
     private final ObjectFactory<T> objectFactory;
     private int totalCount;
 
-    public ObjectPoolPartition(ObjectPool<T> pool, int partition, PoolConfig config, ObjectFactory<T> objectFactory) throws InterruptedException {
+    public ObjectPoolPartition(ObjectPool<T> pool, int partition, PoolConfig config,
+                               ObjectFactory<T> objectFactory, BlockingQueue<Poolable<T>> queue)
+            throws InterruptedException
+    {
         this.pool = pool;
         this.config = config;
         this.objectFactory = objectFactory;
         this.partition = partition;
-        this.objectQueue = new ArrayBlockingQueue<>(config.getMaxSize());
+        this.objectQueue = queue;
         for (int i = 0; i < config.getMinSize(); i++) {
-            objectQueue.put(new Poolable<>(objectFactory.create(), pool, partition));
+            objectQueue.add(new Poolable<>(objectFactory.create(), pool, partition));
         }
         totalCount = config.getMinSize();
     }

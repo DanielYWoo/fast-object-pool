@@ -1,17 +1,14 @@
-
 import cn.danielw.fop.ObjectFactory;
 import cn.danielw.fop.ObjectPool;
 import cn.danielw.fop.PoolConfig;
 import cn.danielw.fop.Poolable;
-
-import java.util.concurrent.CountDownLatch;
 
 /**
  * @author Daniel
  */
 public class BenchmarkFastObjectPool extends Benchmark {
 
-    public BenchmarkFastObjectPool(int workerCount, int loop) throws InterruptedException {
+    BenchmarkFastObjectPool(int workerCount, int loop) throws InterruptedException {
         super(workerCount, loop);
         PoolConfig config = new PoolConfig();
         config.setPartitionSize(16);
@@ -34,19 +31,18 @@ public class BenchmarkFastObjectPool extends Benchmark {
             }
         };
         ObjectPool<StringBuilder> pool = new ObjectPool<>(config, factory);
-        Worker[] workers = new Worker[workerCount];
+        workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, latch, loop, pool);
+            workers[i] = new Worker(this, i, loop, pool);
         }
-        testAndPrint(workers);
     }
 
-    private static class Worker extends BaseWorker {
+    protected static class Worker extends BaseWorker {
 
         private final ObjectPool<StringBuilder> pool;
 
-        public Worker(Benchmark benchmark, int id, CountDownLatch latch, long loop, ObjectPool<StringBuilder> pool) {
-            super(benchmark, id, latch, loop);
+        Worker(Benchmark benchmark, int id, long loop, ObjectPool<StringBuilder> pool) {
+            super(benchmark, id, loop);
             this.pool = pool;
         }
 
@@ -55,9 +51,15 @@ public class BenchmarkFastObjectPool extends Benchmark {
             try {
                 obj = pool.borrowObject();
                 obj.getObject().append("x");
+            } catch (Exception e) {
+                err++;
             } finally {
                 if (obj != null) {
-                    pool.returnObject(obj);
+                    try {
+                        pool.returnObject(obj);
+                    } catch (Exception e) {
+                        err++;
+                    }
                 }
             }
         }

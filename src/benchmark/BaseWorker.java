@@ -1,18 +1,13 @@
-import java.util.concurrent.CountDownLatch;
-
 public abstract class BaseWorker extends Thread {
 
-    protected final Benchmark benchmark;
-    protected final int id;
-    protected final CountDownLatch latch;
-    protected final long loop;
-    protected long tb = 0;
-    protected long tr = 0;
+    private final Benchmark benchmark;
+    private final int id;
+    private final long loop;
+    long err = 0;
 
-    public BaseWorker(Benchmark benchmark, int id, CountDownLatch latch, long loop) {
+    public BaseWorker(Benchmark benchmark, int id, long loop) {
         this.benchmark = benchmark;
         this.id = id;
-        this.latch = latch;
         this.loop = loop;
     }
 
@@ -22,11 +17,10 @@ public abstract class BaseWorker extends Thread {
             doSomething();
         }
         long t2 = System.currentTimeMillis();
-        latch.countDown();
+        benchmark.latch.countDown();
         synchronized (benchmark) {
             benchmark.statsAvgRespTime[id] =  ((double) (t2 - t1)) / loop;
-            benchmark.statsAvgBorrow[id] =  ((double) tb) / loop;
-            benchmark.statsAvgReturn[id] =  ((double) tr) / loop;
+            benchmark.statsErrCount[id] = err;
         }
     }
 

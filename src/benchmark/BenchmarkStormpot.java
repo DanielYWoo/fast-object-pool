@@ -3,7 +3,6 @@ import stormpot.*;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,13 +17,13 @@ public class BenchmarkStormpot extends Benchmark {
         private final Slot slot;
         private final StringBuilder test;
 
-        public MyPoolable(Slot slot) {
+        MyPoolable(Slot slot) {
             test = new StringBuilder();
             this.slot = slot;
             slots.add(slot);
         }
 
-        public StringBuilder getTest() {
+        StringBuilder getTest() {
             return test;
         }
 
@@ -35,7 +34,7 @@ public class BenchmarkStormpot extends Benchmark {
     }
 
 
-    public BenchmarkStormpot(int workerCount, int loop) throws InterruptedException {
+    BenchmarkStormpot(int workerCount, int loop) throws InterruptedException {
         super(workerCount, loop);
 
         Config<MyPoolable> config = new Config<>().setAllocator(new Allocator<MyPoolable>() {
@@ -60,11 +59,10 @@ public class BenchmarkStormpot extends Benchmark {
         });
         */
         Pool<MyPoolable> pool = new BlazePool<>(config);
-        Worker[] workers = new Worker[workerCount];
+        workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, latch, loop, pool);
+            workers[i] = new Worker(this, i, loop, pool);
         }
-        testAndPrint(workers);
         System.out.println("slots:" + slots.size());
     }
 
@@ -73,8 +71,8 @@ public class BenchmarkStormpot extends Benchmark {
         private static final Timeout TIMEOUT = new Timeout(1, TimeUnit.HOURS);
         private final Pool<MyPoolable> pool;
 
-        public Worker(Benchmark benchmark, int id, CountDownLatch latch, int loop, Pool<MyPoolable> pool) {
-            super(benchmark, id, latch, loop);
+        Worker(Benchmark benchmark, int id, int loop, Pool<MyPoolable> pool) {
+            super(benchmark, id, loop);
             this.pool = pool;
         }
 
@@ -82,13 +80,16 @@ public class BenchmarkStormpot extends Benchmark {
             MyPoolable obj = null;
             try {
                 obj = pool.claim(TIMEOUT);
-                // todo: check NPE
                 obj.getTest().append("x");
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                err++;
             } finally {
                 if (obj != null) {
-                    obj.release();
+                    try {
+                        obj.release();
+                    } catch (Exception ex) {
+                        err++;
+                    }
                 }
             }
         }

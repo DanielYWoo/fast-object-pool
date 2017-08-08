@@ -7,24 +7,24 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Benchmark {
 
+    final double[] statsAvgRespTime;
+    final long[] statsErrCount;
     final private int workerCount;
     final private int loop;
     final CountDownLatch latch;
     final AtomicLong created = new AtomicLong(0);
-    static double[] statsAvgRespTime;
-    static double[] statsAvgBorrow;
-    static double[] statsAvgReturn;
+    BaseWorker[] workers;
 
-    public Benchmark(int workerCount, int loop) {
+    Benchmark(int workerCount, int loop) {
         this.workerCount = workerCount;
         this.loop = loop;
         this.latch = new CountDownLatch(workerCount);
         statsAvgRespTime = new double[workerCount];
-        statsAvgBorrow = new double[workerCount];
-        statsAvgReturn = new double[workerCount];
+        statsErrCount = new long[workerCount];
     }
 
-    protected void testAndPrint(BaseWorker[] workers) throws InterruptedException {
+    void testAndPrint() throws InterruptedException {
+        System.out.println();
         System.out.println("Benchmark with " + workerCount + " concurrent threads");
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < workerCount; i++) {
@@ -32,29 +32,29 @@ public class Benchmark {
         }
         latch.await();
         long t2 = System.currentTimeMillis();
+
         double stats = 0;
         for (int i = 0; i < workerCount; i++) {
             stats += statsAvgRespTime[i];
         }
         System.out.println("Average Response Time:" + new DecimalFormat("0.0000").format(stats / workerCount));
+
         stats = 0;
         for (int i = 0; i < workerCount; i++) {
-            stats += statsAvgBorrow[i];
+            stats += statsErrCount[i];
         }
-        System.out.println("Average Borrow Time:" + new DecimalFormat("0.0000").format(stats / workerCount));
-        stats = 0;
-        for (int i = 0; i < workerCount; i++) {
-            stats += statsAvgReturn[i];
-        }
-        System.out.println("Average Return Time:" + new DecimalFormat("0.0000").format(stats / workerCount));
+        System.out.println("Error Ratio:" + new DecimalFormat("0.00%").format(stats * 100 / workerCount / loop));
+
         System.out.println("Average Throughput Per Second:" + new DecimalFormat("0").format(((double) loop * workerCount) / (t2 - t1) ) + "k");
         System.out.println("Objects created:" + created.get());
+        System.out.println();
     }
 
     public static void main(String[] args) throws Exception {
 
         System.out.println("-----------warm up------------");
         testFOP(50,  1000);
+        testFOPDisruptor(50,  1000);
         testStormpot(50,  1000);
         testFurious(50,  1000);
         testCommon(50,  1000);
@@ -72,6 +72,20 @@ public class Benchmark {
         testFOP(500, 10000);
         testFOP(550, 10000);
         testFOP(600, 10000);
+
+        System.out.println("-----------fast object pool with disruptor------------");
+        testFOPDisruptor(50,  50000);
+        testFOPDisruptor(100, 50000);
+        testFOPDisruptor(150, 50000);
+        testFOPDisruptor(200, 30000);
+        testFOPDisruptor(250, 30000);
+        testFOPDisruptor(300, 30000);
+        testFOPDisruptor(350, 20000);
+        testFOPDisruptor(400, 20000);
+        testFOPDisruptor(450, 20000);
+        testFOPDisruptor(500, 10000);
+        testFOPDisruptor(550, 10000);
+        testFOPDisruptor(600, 10000);
 
         System.out.println("-----------stormpot object pool------------");
         testStormpot(50,  50000);
@@ -121,22 +135,27 @@ public class Benchmark {
     }
 
     private static void testFOP(int workerCount, int loop) throws InterruptedException {
-        new BenchmarkFastObjectPool(workerCount, loop);
+        new BenchmarkFastObjectPool(workerCount, loop).testAndPrint();
+        cleanup();
+    }
+
+    private static void testFOPDisruptor(int workerCount, int loop) throws InterruptedException {
+        new BenchmarkFastObjectPoolDisruptor(workerCount, loop).testAndPrint();
         cleanup();
     }
 
     private static void testStormpot(int workerCount, int loop) throws InterruptedException {
-        new BenchmarkStormpot(workerCount, loop);
+        new BenchmarkStormpot(workerCount, loop).testAndPrint();
         cleanup();
     }
 
     private static void testFurious(int workerCount, int loop) throws InterruptedException {
-        new BenchmarkFurious(workerCount, loop);
+        new BenchmarkFurious(workerCount, loop).testAndPrint();
         cleanup();
     }
 
     private static void testCommon(int workerCount, int loop) throws Exception {
-        new BenchmarkCommons(workerCount, loop);
+        new BenchmarkCommons(workerCount, loop).testAndPrint();
         cleanup();
     }
 

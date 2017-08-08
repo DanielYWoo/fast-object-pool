@@ -3,14 +3,12 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
-import java.util.concurrent.CountDownLatch;
-
 /**
  * @author Daniel
  */
 public class BenchmarkCommons extends Benchmark {
 
-    public BenchmarkCommons(int workerCount, int loop) throws Exception {
+    BenchmarkCommons(int workerCount, int loop) throws Exception {
         super(workerCount, loop);
         GenericObjectPool<StringBuilder> pool = new GenericObjectPool<>(new PooledObjectFactory<StringBuilder>() {
             @Override public PooledObject<StringBuilder> makeObject() throws Exception {
@@ -31,43 +29,38 @@ public class BenchmarkCommons extends Benchmark {
         pool.setMaxTotal(256);
         pool.setMinEvictableIdleTimeMillis(60 * 1000 * 5L);
 
-        Worker[] workers = new Worker[workerCount];
+        this.workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, latch, loop, pool);
+            workers[i] = new Worker(this, i, loop, pool);
         }
-
-        testAndPrint(workers);
     }
 
     private static class Worker extends BaseWorker {
 
-        private final GenericObjectPool pool;
+        private final GenericObjectPool<StringBuilder> pool;
 
-        public Worker(Benchmark benchmark, int id, CountDownLatch latch, int loop, GenericObjectPool pool) {
-            super(benchmark, id, latch, loop);
+        Worker(Benchmark benchmark, int id, int loop, GenericObjectPool<StringBuilder> pool) {
+            super(benchmark, id, loop);
             this.pool = pool;
         }
 
         @Override public void doSomething() {
             StringBuilder obj = null;
             try {
-                long tp1 = System.currentTimeMillis();
-                obj = (StringBuilder) pool.borrowObject();
-                tb += System.currentTimeMillis() - tp1;
+                obj = pool.borrowObject();
                 obj.append("x");
             } catch (Exception e) {
-                e.printStackTrace();
+                err++;
             } finally {
                 if (obj != null) {
                     try {
-                        long tp3 = System.currentTimeMillis();
                         pool.returnObject(obj);
-                        tr += System.currentTimeMillis() - tp3;
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        err++;
                     }
                 }
             }
         }
+
     }
 }

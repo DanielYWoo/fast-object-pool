@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0http://maven.apache.org/maven-v4_0_0.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<name>Fast Object Pool</name>
 	<url>https://github.com/DanielYWoo/fast-object-pool</url>
 	<modelVersion>4.0.0</modelVersion>
@@ -46,6 +46,13 @@
 	</distributionManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.conversantmedia</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>1.2.1</version>
+			<!-- This is optional, if you want the best performance you need to manually add disruptor into your dependency -->
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

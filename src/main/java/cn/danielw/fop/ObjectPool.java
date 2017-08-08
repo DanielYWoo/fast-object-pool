@@ -1,5 +1,7 @@
 package cn.danielw.fop;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,7 +21,7 @@ public class ObjectPool<T> {
         this.partitions = new ObjectPoolPartition[config.getPartitionSize()];
         try {
             for (int i = 0; i < config.getPartitionSize(); i++) {
-                partitions[i] = new ObjectPoolPartition<>(this, i, config, objectFactory);
+                partitions[i] = new ObjectPoolPartition<>(this, i, config, objectFactory, createBlockingQueue(poolConfig));
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -28,6 +30,10 @@ public class ObjectPool<T> {
             this.scavenger = new Scavenger();
             this.scavenger.start();
         }
+    }
+
+    protected BlockingQueue<Poolable<T>> createBlockingQueue(PoolConfig poolConfig) {
+        return new ArrayBlockingQueue<>(poolConfig.getMaxSize());
     }
 
     public Poolable<T> borrowObject() {
