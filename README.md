@@ -76,6 +76,8 @@ The source contains a benchmark test, you can run it on your own machine. On my 
 
 ![](docs/benchmark.png?raw=true)
 
+From the figure above you can see stormpot is the fastest, apache commons pool is not suggested.
+
 Maven dependency
 ---------------
 To use this project, simply add this to your pom.xml
