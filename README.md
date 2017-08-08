@@ -56,7 +56,8 @@ try (Poolable<Connection> obj = pool.borrowObject()) {
 }
 ```
 
-If you want best performance, you need add disruptor queue to your dependency and use DisruptorObjectPool.
+If you want best performance, you need add disruptor queue to your dependency and use DisruptorObjectPool. 
+Note, the DisruptorPool has not been fully tested in production yet.
 
 Shut it down
 
