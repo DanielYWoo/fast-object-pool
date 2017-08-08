@@ -103,7 +103,5 @@ If you want disruptor object pool, add this optional dependency
 ```
 
 
-JDK 7+ is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However SLF4j is supported, checkout this for more details: http://www.slf4j.org/legacy.html#jul-to-slf4j
-
-Apache commons-logging is not supported because: http://articles.qos.ch/thinkAgain.html
+JDK 7+ is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However we have two optional dependencies, disruptor and SLF4j.
 
