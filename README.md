@@ -56,6 +56,7 @@ try (Poolable<Connection> obj = pool.borrowObject()) {
 }
 ```
 
+If you want best performance, you need add disruptor queue to your dependency and use DisruptorObjectPool.
 
 Shut it down
 
@@ -67,17 +68,13 @@ pool.shutdown();
 
 How it works
 --------------
-The pool will create multiple partitions, in most cases a thread always access a specified partition, so the more partitions you have, the less probability you run into thread contentions. Each partition has a blocking queue to hold poolable objects; to borrow an object, the first object in the queue will be removed; returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without a problem. In the next major version, I am considering using disruptor to make it even faster. All suggestions are welcome.
-
+The pool will create multiple partitions, in most cases a thread always access a specified partition, so the more partitions you have, the less probability you run into thread contentions. Each partition has a blocking queue to hold poolable objects; to borrow an object, the first object in the queue will be removed; returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without a problem.
 
 How fast it is
 --------------
-The source contains a benchmark test, you can run it on your own machine. On my 2010-mid iMac, it's at least 50 times faster than commons-pool 1.x. As threads increase, commons-pool throughput drops quickly but FOP remains very good performance.
-The figure belows shows that Commons-Pool 1.x is much slower than FOP, and when the worker threads goes up to 100, Commons-Pool throughput drops dramatically.
+The source contains a benchmark test, you can run it on your own machine. On my 2016 Macbook Pro, it's 20-40 times faster than commons-pool 2.2.
 
 ![](docs/benchmark.png?raw=true)
-
-I believe Commons-Pool 2.x will be much faster since they rewriten everything. Update: I updated the benchmark with Commons-Pool 2.2, FOP is still 30 times faster than CP 2.2.
 
 Maven dependency
 ---------------
@@ -89,6 +86,16 @@ To use this project, simply add this to your pom.xml
     <groupId>cn.danielw</groupId>
     <artifactId>fast-object-pool</artifactId>
     <version>2.0.0</version>
+</dependency>
+```
+
+If you want disruptor object pool, add this optional dependency
+
+```xml
+<dependency>
+    <groupId>com.conversantmedia</groupId>
+    <artifactId>disruptor</artifactId>
+    <version>1.2.1</version>
 </dependency>
 ```
 
