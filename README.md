@@ -77,7 +77,7 @@ The source contains a benchmark test, you can run it on your own machine. On my 
 
 ![](docs/benchmark.png?raw=true)
 
-From the figure above you can see stormpot is the fastest, apache commons pool is not suggested.
+From the figure above you can see stormpot is the fastest, if you only borrow one object at a time per thread, you can use stormpot, apache commons pool is not suggested.
 
 Maven dependency
 ---------------
