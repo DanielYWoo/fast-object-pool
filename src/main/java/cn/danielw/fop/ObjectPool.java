@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class ObjectPool<T> {
 
-    protected final PoolConfig config;
-    protected final ObjectFactory<T> factory;
-    protected final ObjectPoolPartition<T>[] partitions;
+    private final PoolConfig config;
+    private final ObjectFactory<T> factory;
+    private final ObjectPoolPartition<T>[] partitions;
     private Scavenger scavenger;
     private volatile boolean shuttingDown;
 

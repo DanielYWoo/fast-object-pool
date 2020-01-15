@@ -16,9 +16,7 @@ public class ObjectPoolPartition<T> {
     private int totalCount;
 
     public ObjectPoolPartition(ObjectPool<T> pool, int partition, PoolConfig config,
-                               ObjectFactory<T> objectFactory, BlockingQueue<Poolable<T>> queue)
-            throws InterruptedException
-    {
+                               ObjectFactory<T> objectFactory, BlockingQueue<Poolable<T>> queue) {
         this.pool = pool;
         this.config = config;
         this.objectFactory = objectFactory;
