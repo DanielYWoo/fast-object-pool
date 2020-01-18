@@ -19,12 +19,8 @@ public class ObjectPool<T> {
         this.config = poolConfig;
         this.factory = objectFactory;
         this.partitions = new ObjectPoolPartition[config.getPartitionSize()];
-        try {
-            for (int i = 0; i < config.getPartitionSize(); i++) {
-                partitions[i] = new ObjectPoolPartition<>(this, i, config, objectFactory, createBlockingQueue(poolConfig));
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        for (int i = 0; i < config.getPartitionSize(); i++) {
+            partitions[i] = new ObjectPoolPartition<>(this, i, config, objectFactory, createBlockingQueue(poolConfig));
         }
         if (config.getScavengeIntervalMilliseconds() > 0) {
             this.scavenger = new Scavenger();
