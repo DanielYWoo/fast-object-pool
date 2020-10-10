@@ -98,7 +98,7 @@ If you want disruptor object pool, add this optional dependency
 <dependency>
     <groupId>com.conversantmedia</groupId>
     <artifactId>disruptor</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.19</version>
 </dependency>
 ```
 
