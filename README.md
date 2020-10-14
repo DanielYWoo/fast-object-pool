@@ -88,12 +88,21 @@ To use this project, simply add this to your pom.xml
 <dependency>
     <groupId>cn.danielw</groupId>
     <artifactId>fast-object-pool</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
 If you want disruptor object pool, add this optional dependency
 
+JDK 8,9,10
+```xml
+<dependency>
+    <groupId>com.conversantmedia</groupId>
+    <artifactId>disruptor</artifactId>
+    <version>1.2.15</version>
+</dependency>
+```
+JDK 11+
 ```xml
 <dependency>
     <groupId>com.conversantmedia</groupId>
@@ -102,6 +111,5 @@ If you want disruptor object pool, add this optional dependency
 </dependency>
 ```
 
-
-JDK 8 is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However we have two optional dependencies, disruptor and SLF4j.
+JDK 8/11 is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However we have two optional dependencies, disruptor and SLF4j.
 
