@@ -4,6 +4,10 @@ fast-object-pool
 ================
 FOP, a lightweight partitioned object pool, you can use it to pool expensive and non-thread-safe objects like thrift clients etc.
 
+Github repo: https://github.com/DanielYWoo/fast-object-pool
+
+Site page: https://danielw.cn/fast-object-pool/
+
 Why yet another object pool
 --------------
 
