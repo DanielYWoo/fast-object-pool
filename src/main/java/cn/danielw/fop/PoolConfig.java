@@ -17,7 +17,15 @@ public class PoolConfig {
         return maxWaitMilliseconds;
     }
 
+    /**
+     * this is only used for blocking call to <code>borrowObject(true)</code>.
+     * @param maxWaitMilliseconds how long to block
+     * @return the pool config
+     */
     public PoolConfig setMaxWaitMilliseconds(int maxWaitMilliseconds) {
+        if (maxWaitMilliseconds <= 0) {
+            throw new IllegalArgumentException("Cannot set max wait time to a negative number " + maxWaitMilliseconds);
+        }
         this.maxWaitMilliseconds = maxWaitMilliseconds;
         return this;
     }
@@ -65,8 +73,13 @@ public class PoolConfig {
     /**
      * @param scavengeIntervalMilliseconds set it to zero if you don't want to automatically shrink your pool.
      *                                     This is useful for fixed-size pool, or pools don't increase too much.
+     * @return the pool config
      */
     public PoolConfig setScavengeIntervalMilliseconds(int scavengeIntervalMilliseconds) {
+        if (scavengeIntervalMilliseconds < 5000) {
+            throw new IllegalArgumentException("Cannot set interval too short (" + scavengeIntervalMilliseconds +
+                    "), must be at least 5 seconds");
+        }
         this.scavengeIntervalMilliseconds = scavengeIntervalMilliseconds;
         return this;
     }
@@ -78,6 +91,7 @@ public class PoolConfig {
     /**
      *  Each time we shrink a pool, we only scavenge some of the objects to avoid an empty pool
      * @param scavengeRatio must be a double between (0, 1]
+     * @return the pool config
      */
     public PoolConfig setScavengeRatio(double scavengeRatio) {
         if (scavengeRatio <= 0 || scavengeRatio > 1) {

@@ -2,11 +2,15 @@ package cn.danielw.fop;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Daniel
  */
 public class ObjectPoolPartition<T> {
+
+    private static final Logger logger = Logger.getLogger(ObjectPoolPartition.class.getName());
 
     private final ObjectPool<T> pool;
     private final PoolConfig config;
@@ -41,8 +45,8 @@ public class ObjectPoolPartition<T> {
                 objectQueue.put(new Poolable<>(objectFactory.create(), pool, partition));
             }
             totalCount += delta;
-            if (Log.isDebug())
-                Log.debug("increase objects: count=", totalCount, ", queue size=", objectQueue.size());
+            if (logger.isLoggable(Level.FINE))
+                logger.fine("increase objects: count=" + totalCount + ", queue size=" + objectQueue.size());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -69,8 +73,8 @@ public class ObjectPoolPartition<T> {
         while (delta-- > 0 && (obj = objectQueue.poll()) != null) {
             // performance trade off: delta always decrease even if the queue is empty,
             // so it could take several intervals to shrink the pool to the configured min value.
-            if (Log.isDebug())
-                Log.debug("obj=", obj, ", now-last=", now - obj.getLastAccessTs(), ", max idle=",
+            if (logger.isLoggable(Level.FINE))
+                logger.fine("obj=" + obj + ", now-last=" + (now - obj.getLastAccessTs()) + ", max idle=" +
                     config.getMaxIdleMilliseconds());
             if (now - obj.getLastAccessTs() > config.getMaxIdleMilliseconds() &&
                     ThreadLocalRandom.current().nextDouble(1) < config.getScavengeRatio()) {
@@ -80,7 +84,7 @@ public class ObjectPoolPartition<T> {
                 objectQueue.put(obj); //put it back
             }
         }
-        if (removed > 0) Log.debug(removed, " objects were scavenged.");
+        if (removed > 0) logger.fine(removed + " objects were scavenged.");
     }
 
     public synchronized int shutdown() {

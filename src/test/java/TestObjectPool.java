@@ -14,12 +14,12 @@ import static org.junit.Assert.assertEquals;
 public class TestObjectPool {
 
 
-    public ObjectPool init(double scavengeRatio) {
+    public ObjectPool<StringBuilder> init(double scavengeRatio) {
         Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
         Logger.getLogger("").setLevel(Level.ALL);
         PoolConfig config = new PoolConfig();
         config.setPartitionSize(2).setMinSize(2).setMaxSize(20).setMaxIdleMilliseconds(5000).
-            setScavengeIntervalMilliseconds(5000).setScavengeRatio(scavengeRatio);
+                setMaxWaitMilliseconds(100).setScavengeIntervalMilliseconds(5000).setScavengeRatio(scavengeRatio);
 
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
             @Override
@@ -36,12 +36,12 @@ public class TestObjectPool {
                 return true;
             }
         };
-        return new ObjectPool(config, factory);
+        return new ObjectPool<>(config, factory);
     }
 
     @Test
-    public void testSimple() throws InterruptedException {
-        ObjectPool pool = init(1.0);
+    public void testSimple() {
+        ObjectPool<StringBuilder> pool = init(1.0);
         for (int i = 0; i < 100; i++) {
             try (Poolable<StringBuilder> obj = pool.borrowObject()) {
                 obj.getObject().append("x");
@@ -53,7 +53,7 @@ public class TestObjectPool {
 
     @Test
     public void testShrink() throws InterruptedException {
-        final ObjectPool pool = init(1.0);
+        final ObjectPool<StringBuilder> pool = init(1.0);
         List<Poolable<StringBuilder>> borrowed = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             System.out.println("test borrow");
@@ -75,19 +75,13 @@ public class TestObjectPool {
         System.out.println("scavenged, pool size=" + pool.getSize());
 
         // test return after shutdown
-        Thread testThread = new Thread() {
-            @Override
-            public void run() {
-                Poolable<StringBuilder> obj = pool.borrowObject();
-                try {
-                    System.out.println("pool size:" + pool.getSize());
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                }
-                pool.returnObject(obj);
-                System.out.println("pool size:" + pool.getSize());
-            }
-        };
+        Thread testThread = new Thread(() -> {
+            Poolable<StringBuilder> obj = pool.borrowObject();
+            System.out.println("pool size:" + pool.getSize());
+            try { Thread.sleep(10000); } catch (InterruptedException ignored) { }
+            pool.returnObject(obj);
+            System.out.println("pool size:" + pool.getSize());
+        });
         testThread.start();
         testThread.join();
         int removed = pool.shutdown(); // this will block 9 seconds
