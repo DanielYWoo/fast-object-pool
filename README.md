@@ -11,7 +11,8 @@ Site page: https://danielw.cn/fast-object-pool/
 Why yet another object pool
 --------------
 
-FOP is implemented with partitions to avoid thread contention, the performance test shows it's much faster than Apache commons-pool. This project is not to replace Apache commons-pool, this project does not provide rich features like commons-pool, this project mainly aims on:
+FOP is implemented with partitions to avoid thread contention, the performance test shows it's much faster than Apache commons-pool. 
+This project is not to replace Apache commons-pool, this project does not provide rich features like commons-pool, this project mainly aims on:
 1. Zero dependency
 2. High throughput with many concurrent requests
 3. Less code so everybody can read it and understand it.
@@ -73,7 +74,11 @@ pool.shutdown();
 
 How it works
 --------------
-The pool will create multiple partitions, in most cases a thread always access a specified partition, so the more partitions you have, the less probability you run into thread contentions. Each partition has a blocking queue to hold poolable objects; to borrow an object, the first object in the queue will be removed; returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without any problem.
+The pool will create multiple partitions, in most cases a thread always access a specified partition, 
+so the more partitions you have, the less probability you run into thread contentions. Each partition has a 
+blocking queue to hold poolable objects; to borrow an object, the first object in the queue will be removed; 
+returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments 
+design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without any problem.
 
 How fast it is
 --------------
@@ -90,14 +95,19 @@ The diagram above if you only borrow one object at a time per thread, if you nee
 
 Test Case 2: we have a pool of 256 objects, use 50/100/400/600 threads to borrow two objects each time each thread, then return to the pool.
 
-In this case, we could have 600x2=1200 objects required concurrently but only 256 is available, so there will be contention and timeout error. FOP keeps error rate steadily but stormpot starts to see 7% error rate with 100 threads. (I cannot test stormpot with 600 threads because it's too slow.) Furious seems not working because I cannot find a way to set timeout, without timeout I see circular deadlock in Furious, so I exclude Furious from the diagram below . Both FOP and Stormpot provides timeout configuration, in the test I set timeout to 10ms. FOP throws an exception, Stormpot returns null, so we can mark it as failed (show in the error rate plot). 
+In this case, we could have 600x2=1200 objects required concurrently but only 256 is available, so there will be contention and timeout error. 
+FOP keeps error rate steadily but stormpot starts to see 7% error rate with 100 threads. (I cannot test stormpot with 600 threads because it's too slow) 
+Furious seems not working because I cannot find a way to set timeout, without timeout I see circular deadlock in Furious, 
+so I exclude Furious from the diagram below . Both FOP and Stormpot provides timeout configuration, in the test I set timeout to 10ms. 
+FOP throws an exception, Stormpot returns null, so we can mark it as failed (show in the error rate plot). 
 Again, Apache common pool reaches almost 80% error rate, basically not working.
 ![](docs/b2-error-rate.png?raw=true)
 
-The throughput of FOP is also much better than other pools.
+The throughput of FOP is also much better than other pools. Interestingly, in this case, Apache common pool is slightly faster than Stormpot. 
+I don't know why Stormpot degrade so fast with two borrows in one thread. If you know how to optimize Stormpot configuration for this case please let me know.
 ![](docs/b2-throughput.png?raw=true)
 
-So, in short, if you can ensure borrow at most one object in each threads, stormpot is the best choice. If you cannot ensure that, use FOP.
+So, in short, if you can ensure borrow at most one object in each thread, Stormpot is the best choice. If you cannot ensure that, use FOP which is more consistent in all scenarios.
 
 Maven dependency
 ---------------
@@ -132,4 +142,3 @@ JDK 11+
 ```
 
 JDK 8/11 is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However we have two optional dependencies, disruptor and SLF4j.
-
