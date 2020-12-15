@@ -87,6 +87,7 @@ The source contains a benchmark test, you can run it on your own machine. On my 
 Test Case 1: we have a pool of 256 objects, use 50/100/400/600 threads to borrow one object each time in each thread, then return to the pool.
 
 The x-axis in the diagram below is the number of threads, you can see Stormpot provides the best throughput. FOP is closely behind Stormpot. Apache common pool is very slow, Furious is slightly faster than it. 
+You see the throughput drops after 200 threads because there are only 256 objects, so there will be data race and timeout with more threads.
 ![](docs/b1-throughput.png?raw=true)
 When you have 600 threads contending 256 objects, Apache common pool reaches over 85% error rate (probably because returning is too slow), basically it cannot be used in high concurrency.
 ![](docs/b1-error-rate.png?raw=true)

@@ -8,7 +8,7 @@ public class Start {
     public static void main(String[] args) throws Exception {
 
         System.out.println("-----------warm up------------");
-        testFOP(50, 1, 1000);
+//        testFOP(50, 1, 1000);
         testFOPDisruptor(50, 1, 1000);
         testStormpot(50, 1, 1000);
         testFurious(50, 1, 1000);
@@ -16,22 +16,22 @@ public class Start {
         csvLines.clear();
 
         System.out.println("-----------warm up done, start test ------------");
-        testAll(1);
-        printResult(csvLines);
+//        testAll(1);
+//        printResult(csvLines);
         testAll(2);
         printResult(csvLines);
         System.exit(0);
     }
 
     private static void printResult(List<String> csvLines) {
-        System.out.println("name,threads,borrows,loops,pool size,error rate,throughput");
+        System.out.println("name,threads,borrows,loops,pool size,legend,error rate,throughput");
         csvLines.forEach(System.out::println);
         System.out.println();
     }
 
     private static void testAll(int borrows) throws Exception {
-        System.out.println("-----------fast object pool (borrow " + borrows + " objects per time)------------");
-        testFOP(borrows);
+//        System.out.println("-----------fast object pool (borrow " + borrows + " objects per time)------------");
+//        testFOP(borrows);
 
         System.out.println("-----------fast object pool with disruptor (borrow " + borrows + " object per time)------------");
         testFOPDisruptor(borrows);
@@ -51,15 +51,15 @@ public class Start {
         // too slow, so less loops
         testCommon(50,  borrows, 20000);
         testCommon(100, borrows, 10000);
-        testCommon(150, borrows, 9000);
+//        testCommon(150, borrows, 9000);
         testCommon(200, borrows, 8000);
-        testCommon(250, borrows, 7000);
-        testCommon(300, borrows, 6000);
-        testCommon(350, borrows, 5000);
+//        testCommon(250, borrows, 7000);
+//        testCommon(300, borrows, 6000);
+//        testCommon(350, borrows, 5000);
         testCommon(400, borrows, 4000);
-        testCommon(450, borrows, 3000);
-        testCommon(500, borrows, 2000);
-        testCommon(550, borrows, 1000);
+//        testCommon(450, borrows, 3000);
+//        testCommon(500, borrows, 2000);
+//        testCommon(550, borrows, 1000);
         testCommon(600, borrows, 1000);
     }
 
@@ -70,30 +70,33 @@ public class Start {
         }
         testFurious(50,  borrows, 50000);
         testFurious(100, borrows, 50000);
-        testFurious(150, borrows, 50000);
+//        testFurious(150, borrows, 50000);
         testFurious(200, borrows, 30000);
-        testFurious(250, borrows, 30000);
-        testFurious(300, borrows, 30000);
-        testFurious(350, borrows, 20000);
+//        testFurious(250, borrows, 30000);
+//        testFurious(300, borrows, 30000);
+//        testFurious(350, borrows, 20000);
         testFurious(400, borrows, 20000);
-        testFurious(450, borrows, 20000);
-        testFurious(500, borrows, 10000);
-        testFurious(550, borrows, 10000);
+//        testFurious(450, borrows, 20000);
+//        testFurious(500, borrows, 10000);
+//        testFurious(550, borrows, 10000);
         testFurious(600, borrows, 10000);
     }
 
     private static void testStormpot(int borrows) throws InterruptedException {
         testStormpot(50,  borrows, 50000);
         testStormpot(100, borrows, 50000);
-        testStormpot(150, borrows, 50000);
+//        testStormpot(150, borrows, 50000);
+        if (borrows > 1) {
+            return; // this is too slow, skip it
+        }
         testStormpot(200, borrows, 30000);
-        testStormpot(250, borrows, 30000);
-        testStormpot(300, borrows, 30000);
-        testStormpot(350, borrows, 20000);
+//        testStormpot(250, borrows, 30000);
+//        testStormpot(300, borrows, 30000);
+//        testStormpot(350, borrows, 20000);
         testStormpot(400, borrows, 20000);
-        testStormpot(450, borrows, 20000);
-        testStormpot(500, borrows, 10000);
-        testStormpot(550, borrows, 10000);
+//        testStormpot(450, borrows, 20000);
+//        testStormpot(500, borrows, 10000);
+//        testStormpot(550, borrows, 10000);
         testStormpot(600, borrows, 10000);
     }
 
@@ -116,15 +119,15 @@ public class Start {
     private static void testFOPDisruptor(int borrows) throws InterruptedException {
         testFOPDisruptor(50, borrows, 50000);
         testFOPDisruptor(100,borrows, 50000);
-        testFOPDisruptor(150,borrows, 50000);
+//        testFOPDisruptor(150,borrows, 50000);
         testFOPDisruptor(200,borrows, 30000);
-        testFOPDisruptor(250,borrows, 30000);
-        testFOPDisruptor(300,borrows, 30000);
-        testFOPDisruptor(350,borrows, 20000);
+//        testFOPDisruptor(250,borrows, 30000);
+//        testFOPDisruptor(300,borrows, 30000);
+//        testFOPDisruptor(350,borrows, 20000);
         testFOPDisruptor(400,borrows, 20000);
-        testFOPDisruptor(450,borrows, 20000);
-        testFOPDisruptor(500,borrows, 10000);
-        testFOPDisruptor(550,borrows, 10000);
+//        testFOPDisruptor(450,borrows, 20000);
+//        testFOPDisruptor(500,borrows, 10000);
+//        testFOPDisruptor(550,borrows, 10000);
         testFOPDisruptor(600,borrows, 10000);
     }
 
