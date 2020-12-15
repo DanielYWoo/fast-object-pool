@@ -78,10 +78,21 @@ The pool will create multiple partitions, in most cases a thread always access a
 How fast it is
 --------------
 The source contains a benchmark test, you can run it on your own machine. On my 2016 Macbook Pro, it's 20-40 times faster than commons-pool 2.2.
-
 ![](docs/benchmark.png?raw=true)
 
-From the figure above you can see stormpot is the fastest, if you only borrow one object at a time per thread, you can use stormpot, apache commons pool is not suggested.
+You can see more detailed comparison including error rate below. From the figure below you can see 
+stormpot is the fastest, if you only borrow one object at a time per thread, you can use stormpot. 
+Apache commons pool is not recommended.
+![](docs/b1-throughput.png?raw=true)
+![](docs/b1-error-rate.png?raw=true)
+
+If we borrow two objects in each thread then return them to the pool, things are getting more interesting.
+Stormpot becomes very slow at 100 threads, so I cannot continue to test with more threads. Furious simply does not work, 
+because when you have more than 256 threads contend on 256 objects, some threads will hang (deadlock). Both FOP and Stormpot 
+provides timeout support, FOP throws an exception, Stormpot returns null, so we can mark it as failed (show in the error rate plot). 
+But I cannot find a way to set timeout in Furious, so I totally exclude it from the diagram below. If you know how please let me know.
+![](docs/b2-throughput.png?raw=true)
+![](docs/b2-error-rate.png?raw=true)
 
 Maven dependency
 ---------------

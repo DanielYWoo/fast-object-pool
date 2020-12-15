@@ -3,13 +3,16 @@ import nf.fr.eraasoft.pool.PoolException;
 import nf.fr.eraasoft.pool.PoolSettings;
 import nf.fr.eraasoft.pool.PoolableObjectBase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Daniel
  */
 public class BenchmarkFurious extends Benchmark {
 
-    BenchmarkFurious(int workerCount, int loop) throws InterruptedException {
-        super(workerCount, loop);
+    BenchmarkFurious(int workerCount, int borrows, int loop) throws InterruptedException {
+        super("furious", workerCount, borrows, loop);
 
         // Create your PoolSettings with an instance of PoolableObject
         PoolSettings<StringBuilder> poolSettings = new PoolSettings<>(new PoolableObjectBase<StringBuilder>() {
@@ -31,7 +34,7 @@ public class BenchmarkFurious extends Benchmark {
 
         workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, loop, pool);
+            workers[i] = new Worker(this, i, borrows, loop, pool);
         }
     }
 
@@ -39,29 +42,30 @@ public class BenchmarkFurious extends Benchmark {
 
         private final ObjectPool<StringBuilder> pool;
 
-        Worker(Benchmark benchmark, int id, long loop, ObjectPool<StringBuilder> pool) {
-            super(benchmark, id, loop);
+        Worker(Benchmark benchmark, int id, int borrows, long loop, ObjectPool<StringBuilder> pool) {
+            super(benchmark, id, borrows, loop);
             this.pool = pool;
         }
 
         @Override public void doSomething() {
-            StringBuilder buffer = null;
+            List<StringBuilder> list = new ArrayList<>();
             try {
-                buffer = pool.getObj();
-                buffer.append("x");
-            } catch (PoolException e) {
+                for (int i = 0; i < borrowsPerLoop; i++) {
+                    StringBuilder obj = pool.getObj(); // NO timeout at method level
+                    obj.append("X");
+                    list.add(obj);
+                }
+            } catch (Exception e) {
                 err++;
             } finally {
-                if (buffer != null) {
+                list.forEach(o -> {
                     try {
-                        pool.returnObj(buffer);
+                        pool.returnObj(o);
                     } catch (Exception e) {
                         err++;
                     }
-                }
+                });
             }
-
         }
-
     }
 }

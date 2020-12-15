@@ -3,13 +3,16 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Daniel
  */
 public class BenchmarkCommons extends Benchmark {
 
-    BenchmarkCommons(int workerCount, int loop) throws Exception {
-        super(workerCount, loop);
+    BenchmarkCommons(int workerCount, int borrowsPerLoop, int loop) throws Exception {
+        super("common-pool", workerCount, borrowsPerLoop, loop);
         GenericObjectPool<StringBuilder> pool = new GenericObjectPool<>(new PooledObjectFactory<StringBuilder>() {
             @Override public PooledObject<StringBuilder> makeObject() throws Exception {
                 created.incrementAndGet();
@@ -31,7 +34,7 @@ public class BenchmarkCommons extends Benchmark {
 
         this.workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, loop, pool);
+            workers[i] = new Worker(this, i, loop, borrowsPerLoop, pool);
         }
     }
 
@@ -39,26 +42,28 @@ public class BenchmarkCommons extends Benchmark {
 
         private final GenericObjectPool<StringBuilder> pool;
 
-        Worker(Benchmark benchmark, int id, int loop, GenericObjectPool<StringBuilder> pool) {
-            super(benchmark, id, loop);
+        Worker(Benchmark benchmark, int id, int loop, int borrowsPerLoop, GenericObjectPool<StringBuilder> pool) {
+            super(benchmark, id, borrowsPerLoop, loop);
             this.pool = pool;
         }
 
         @Override public void doSomething() {
-            StringBuilder obj = null;
+            List<StringBuilder> list = new ArrayList<>();
             try {
-                obj = pool.borrowObject();
-                obj.append("x");
+                for (int i = 0; i < borrowsPerLoop; i++) {
+                    StringBuilder obj = pool.borrowObject(10);
+                    list.add(obj);
+                }
             } catch (Exception e) {
                 err++;
             } finally {
-                if (obj != null) {
+                list.forEach(o -> {
                     try {
-                        pool.returnObject(obj);
+                        pool.returnObject(o);
                     } catch (Exception e) {
                         err++;
                     }
-                }
+                });
             }
         }
 

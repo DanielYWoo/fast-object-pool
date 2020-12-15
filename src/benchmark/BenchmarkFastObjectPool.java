@@ -3,18 +3,23 @@ import cn.danielw.fop.ObjectPool;
 import cn.danielw.fop.PoolConfig;
 import cn.danielw.fop.Poolable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Daniel
  */
 public class BenchmarkFastObjectPool extends Benchmark {
 
-    BenchmarkFastObjectPool(int workerCount, int loop) throws InterruptedException {
-        super(workerCount, loop);
+    BenchmarkFastObjectPool(String name, int workerCount, int borrows, int loop) throws InterruptedException {
+        super(name, workerCount, borrows, loop);
         PoolConfig config = new PoolConfig();
         config.setPartitionSize(16);
         config.setMaxSize(16);
         config.setMinSize(16);
         config.setMaxIdleMilliseconds(60 * 1000 * 5);
+        config.setMaxWaitMilliseconds(10);
+
 
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
             @Override
@@ -33,7 +38,7 @@ public class BenchmarkFastObjectPool extends Benchmark {
         ObjectPool<StringBuilder> pool = new ObjectPool<>(config, factory);
         workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, loop, pool);
+            workers[i] = new Worker(this, i, borrows, loop, pool);
         }
     }
 
@@ -41,26 +46,29 @@ public class BenchmarkFastObjectPool extends Benchmark {
 
         private final ObjectPool<StringBuilder> pool;
 
-        Worker(Benchmark benchmark, int id, long loop, ObjectPool<StringBuilder> pool) {
-            super(benchmark, id, loop);
+        Worker(Benchmark benchmark, int id, int borrows, long loop, ObjectPool<StringBuilder> pool) {
+            super(benchmark, id, borrows, loop);
             this.pool = pool;
         }
 
         @Override public void doSomething() {
-            Poolable<StringBuilder> obj = null;
+            List<Poolable<StringBuilder>> list = new ArrayList<>();
             try {
-                obj = pool.borrowObject();
-                obj.getObject().append("x");
+                for (int i = 0; i < borrowsPerLoop; i++) {
+                    Poolable<StringBuilder> obj = pool.borrowObject(false);
+                    obj.getObject().append("X");
+                    list.add(obj);
+                }
             } catch (Exception e) {
                 err++;
             } finally {
-                if (obj != null) {
+                list.forEach(o -> {
                     try {
-                        pool.returnObject(obj);
+                        pool.returnObject(o);
                     } catch (Exception e) {
                         err++;
                     }
-                }
+                });
             }
         }
     }

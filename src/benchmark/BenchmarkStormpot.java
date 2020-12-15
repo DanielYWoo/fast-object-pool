@@ -1,6 +1,8 @@
 import stormpot.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +36,8 @@ public class BenchmarkStormpot extends Benchmark {
     }
 
 
-    BenchmarkStormpot(int workerCount, int loop) throws InterruptedException {
-        super(workerCount, loop);
+    BenchmarkStormpot(int workerCount, int borrows, int loop) throws InterruptedException {
+        super("Stormpot", workerCount, borrows, loop);
 
         Config<MyPoolable> config = new Config<>().setAllocator(new Allocator<MyPoolable>() {
             @Override
@@ -61,36 +63,39 @@ public class BenchmarkStormpot extends Benchmark {
         Pool<MyPoolable> pool = new BlazePool<>(config);
         workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, loop, pool);
+            workers[i] = new Worker(this, i, borrows, loop, pool);
         }
         System.out.println("slots:" + slots.size());
     }
 
     private static class Worker extends BaseWorker {
 
-        private static final Timeout TIMEOUT = new Timeout(1, TimeUnit.HOURS);
+        private static final Timeout TIMEOUT = new Timeout(10, TimeUnit.MILLISECONDS);
         private final Pool<MyPoolable> pool;
 
-        Worker(Benchmark benchmark, int id, int loop, Pool<MyPoolable> pool) {
-            super(benchmark, id, loop);
+        Worker(Benchmark benchmark, int id, int borrows, int loop, Pool<MyPoolable> pool) {
+            super(benchmark, id, borrows, loop);
             this.pool = pool;
         }
 
         @Override public void doSomething() {
-            MyPoolable obj = null;
+            List<MyPoolable> list = new ArrayList<>();
             try {
-                obj = pool.claim(TIMEOUT);
-                obj.getTest().append("x");
-            } catch (InterruptedException e) {
+                for (int i = 0; i < borrowsPerLoop; i++) {
+                    MyPoolable obj = pool.claim(TIMEOUT);
+                    obj.getTest().append("x");
+                    list.add(obj);
+                }
+            } catch (Exception e) {
                 err++;
             } finally {
-                if (obj != null) {
+                list.forEach(o -> {
                     try {
-                        obj.release();
-                    } catch (Exception ex) {
+                        o.release();
+                    } catch (Exception e) {
                         err++;
                     }
-                }
+                });
             }
         }
     }
