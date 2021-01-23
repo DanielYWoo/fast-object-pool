@@ -36,6 +36,10 @@ public class ObjectPoolPartition<T> {
         return objectQueue;
     }
 
+    /**
+     * @param delta the number to increase
+     * @return the actual number of increased objects
+     */
     public synchronized int increaseObjects(int delta) {
         if (delta + totalCount > config.getMaxSize()) {
             delta = config.getMaxSize() - totalCount;

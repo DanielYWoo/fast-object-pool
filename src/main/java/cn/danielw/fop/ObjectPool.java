@@ -70,23 +70,24 @@ public class ObjectPool<T> {
         }
         int partition = (int) (Thread.currentThread().getId() % this.config.getPartitionSize());
         ObjectPoolPartition<T> subPool = this.partitions[partition];
-        Poolable<T> freeObject = subPool.getObjectQueue().poll();
-        if (freeObject == null) {
-            // increase objects and return one, it will return null if reach max size
-            subPool.increaseObjects(1);
-            try {
-                if (noTimeout) {
-                    freeObject = subPool.getObjectQueue().take();
-                } else {
-                    freeObject = subPool.getObjectQueue().poll(config.getMaxWaitMilliseconds(), TimeUnit.MILLISECONDS);
-                    if (freeObject == null) {
-                        throw new RuntimeException("Cannot get a free object from the pool");
+        Poolable<T> freeObject;
+        do { // loop to ensure: if T1 increases an object but T2 takes it, then T1 can poll and increase it again
+            freeObject = subPool.getObjectQueue().poll();
+            if (freeObject == null && subPool.increaseObjects(1) <= 0) { // full, have to wait
+                try {
+                    if (noTimeout) {
+                        freeObject = subPool.getObjectQueue().take();
+                    } else {
+                        freeObject = subPool.getObjectQueue().poll(config.getMaxWaitMilliseconds(), TimeUnit.MILLISECONDS);
+                        if (freeObject == null) {
+                            throw new RuntimeException("Cannot get a free object from the pool");
+                        }
                     }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e); // will never happen
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e); // will never happen
             }
-        }
+        } while (freeObject == null);
         freeObject.setLastAccessTs(System.currentTimeMillis());
         return freeObject;
     }
