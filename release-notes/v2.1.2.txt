@@ -1,0 +1,5 @@
+Features:
+- N/A
+
+Fixes:
+- Unnecessary wait in https://github.com/DanielYWoo/fast-object-pool/issues/25
