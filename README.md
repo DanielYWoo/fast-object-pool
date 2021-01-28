@@ -119,7 +119,7 @@ To use this project, simply add this to your pom.xml
 <dependency>
     <groupId>cn.danielw</groupId>
     <artifactId>fast-object-pool</artifactId>
-    <version>2.1.1</version>
+    <version>2.1.2</version>
 </dependency>
 ```
 
