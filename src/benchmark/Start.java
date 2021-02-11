@@ -169,6 +169,7 @@ public class Start {
             Thread.sleep(1000L * 2);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         System.out.println();
     }
