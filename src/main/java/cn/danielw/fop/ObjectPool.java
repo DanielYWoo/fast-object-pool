@@ -64,6 +64,7 @@ public class ObjectPool<T> {
         throw new RuntimeException("Cannot find a valid object");
     }
 
+    @SuppressWarnings({"java:S112", "java:S2142"})
     private Poolable<T> getObject(boolean noTimeout) {
         if (shuttingDown) {
             throw new IllegalStateException("Your pool is shutting down");
@@ -92,6 +93,7 @@ public class ObjectPool<T> {
         return freeObject;
     }
 
+    @SuppressWarnings({"java:S112", "java:S2142"})
     public void returnObject(Poolable<T> obj) {
         ObjectPoolPartition<T> subPool = this.partitions[obj.getPartition()];
         try {
@@ -127,7 +129,7 @@ public class ObjectPool<T> {
 
     private class Scavenger extends Thread {
 
-        @Override
+        @Override @SuppressWarnings({"java:S2142", "java:S108"})
         public void run() {
             int partition = 0;
             while (!ObjectPool.this.shuttingDown) {
@@ -135,7 +137,9 @@ public class ObjectPool<T> {
                     //noinspection BusyWait
                     Thread.sleep(config.getScavengeIntervalMilliseconds());
                     partition = ++partition % config.getPartitionSize();
-                    logger.fine("scavenge sub pool " + partition);
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.fine("scavenge sub pool " + partition);
+                    }
                     partitions[partition].scavenge();
                 } catch (InterruptedException ignored) {
                 }
