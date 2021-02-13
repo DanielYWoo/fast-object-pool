@@ -83,7 +83,13 @@
 			<artifactId>objectpool</artifactId>
 			<scope>test</scope> <!-- benchmark only -->
 			<version>1.1.2</version>
-		</dependency>
+    </dependency>
+    <dependency>
+      <groupId>org.jacoco</groupId>
+      <artifactId>jacoco-maven-plugin</artifactId>
+      <version>0.8.6</version>
+      <type>maven-plugin</type>
+    </dependency>
 	</dependencies>
 
 	<scm>
@@ -131,7 +137,12 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.6</version>
+      </plugin>
 		</plugins>
 	</build>
 
