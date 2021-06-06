@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.projectKey>DanielYWoo_fast-object-pool</sonar.projectKey>
-    <sonar.organization>danielywoo</sonar.organization>
+    <sonar.organization>danielywoo1</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
 
