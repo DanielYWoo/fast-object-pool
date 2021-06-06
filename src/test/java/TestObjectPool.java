@@ -70,7 +70,7 @@ public class TestObjectPool {
         assertEquals(12, pool.getSize());
         System.out.println("pool size:" + pool.getSize());
 
-        Thread.sleep(20000);
+        Thread.sleep(20000); //NOSONAR
         assertEquals(4, pool.getSize());
         System.out.println("scavenged, pool size=" + pool.getSize());
 
