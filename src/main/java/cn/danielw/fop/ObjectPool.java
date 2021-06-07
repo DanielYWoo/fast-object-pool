@@ -81,7 +81,7 @@ public class ObjectPool<T> {
                     } else {
                         freeObject = subPool.getObjectQueue().poll(config.getMaxWaitMilliseconds(), TimeUnit.MILLISECONDS);
                         if (freeObject == null) {
-                            throw new RuntimeException("Cannot get a free object from the pool");
+                            throw new PoolExhaustedException();
                         }
                     }
                 } catch (InterruptedException e) {
