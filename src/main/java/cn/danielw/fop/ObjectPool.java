@@ -58,10 +58,11 @@ public class ObjectPool<T> {
             if (factory.validate(result.getObject())) {
                 return result;
             } else {
+                logger.warning("Invalid object found in the pool, destroy it: " + result.getObject());
                 this.partitions[result.getPartition()].decreaseObject(result);
             }
         }
-        throw new RuntimeException("Cannot find a valid object");
+        throw new PoolInvalidObjectException();
     }
 
     @SuppressWarnings({"java:S112", "java:S2142"})
