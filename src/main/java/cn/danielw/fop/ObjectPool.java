@@ -76,21 +76,27 @@ public class ObjectPool<T> {
         do { // loop to ensure: if T1 increases an object but T2 takes it, then T1 can poll and increase it again
             freeObject = subPool.getObjectQueue().poll();
             if (freeObject == null && subPool.increaseObjects(1) <= 0) { // full, have to wait
-                try {
-                    if (noTimeout) {
-                        freeObject = subPool.getObjectQueue().take();
-                    } else {
-                        freeObject = subPool.getObjectQueue().poll(config.getMaxWaitMilliseconds(), TimeUnit.MILLISECONDS);
-                        if (freeObject == null) {
-                            throw new PoolExhaustedException();
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e); // will never happen
-                }
+                freeObject = waitWhenSubPoolIsFull(noTimeout, subPool);
             }
         } while (freeObject == null);
         freeObject.setLastAccessTs(System.currentTimeMillis());
+        return freeObject;
+    }
+
+    private Poolable<T> waitWhenSubPoolIsFull(boolean noTimeout, ObjectPoolPartition<T> subPool) {
+        Poolable<T> freeObject;
+        try {
+            if (noTimeout) {
+                freeObject = subPool.getObjectQueue().take();
+            } else {
+                freeObject = subPool.getObjectQueue().poll(config.getMaxWaitMilliseconds(), TimeUnit.MILLISECONDS);
+                if (freeObject == null) {
+                    throw new PoolExhaustedException();
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e); // will never happen
+        }
         return freeObject;
     }
 
