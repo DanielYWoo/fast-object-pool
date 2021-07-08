@@ -94,7 +94,8 @@ public class ObjectPoolPartition<T> {
 
     public synchronized int shutdown() {
         int removed = 0;
-        while (this.totalCount > 0) {
+        long startTs = System.currentTimeMillis();
+        while (this.totalCount > 0 && System.currentTimeMillis() - startTs < config.getShutdownWaitMilliseconds()) {
             Poolable<T> obj = objectQueue.poll();
             if (obj != null) {
                 decreaseObject(obj);
