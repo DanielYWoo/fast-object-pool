@@ -109,8 +109,9 @@ public class PoolConfig {
     /**
      * If any borrowed objects are leaked and cannot be returned, the pool will be shut down after
      * <code>partitions * shutdownWaitMilliseconds</code> milliseconds.
-     * If any borrowed objects are in use and cannot be returned to the pool timely,
-     * the pool will be shut down with leaked objects.
+     * If any borrowed objects are in use and cannot be returned to the pool timely
+     * within <code>partitions * shutdownWaitMilliseconds</code> milliseconds,
+     * the pool will be shut down and the objects in use will not be returned.
      * @param shutdownWaitMilliseconds default to 30 seconds for each partition
      */
     public void setShutdownWaitMilliseconds(int shutdownWaitMilliseconds) {
