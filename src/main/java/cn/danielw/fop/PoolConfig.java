@@ -12,6 +12,7 @@ public class PoolConfig {
     private int partitionSize = 4;
     private int scavengeIntervalMilliseconds = 1000 * 60 * 2;
     private double scavengeRatio = 0.5; // avoid cleaning up all connections in the pool at the same time
+    private int shutdownWaitMilliseconds = 1000 * 30;
 
     public int getMaxWaitMilliseconds() {
         return maxWaitMilliseconds;
@@ -99,5 +100,21 @@ public class PoolConfig {
         }
         this.scavengeRatio = scavengeRatio;
         return this;
+    }
+
+    public int getShutdownWaitMilliseconds() {
+        return shutdownWaitMilliseconds;
+    }
+
+    /**
+     * If any borrowed objects are leaked and cannot be returned, the pool will be shut down after
+     * <code>partitions * shutdownWaitMilliseconds</code> milliseconds.
+     * If any borrowed objects are in use and cannot be returned to the pool timely
+     * within <code>partitions * shutdownWaitMilliseconds</code> milliseconds,
+     * the pool will be shut down and the objects in use will not be returned.
+     * @param shutdownWaitMilliseconds default to 30 seconds for each partition
+     */
+    public void setShutdownWaitMilliseconds(int shutdownWaitMilliseconds) {
+        this.shutdownWaitMilliseconds = shutdownWaitMilliseconds;
     }
 }
