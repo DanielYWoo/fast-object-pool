@@ -12,7 +12,7 @@ public class PoolConfig {
     private int partitionSize = 4;
     private int scavengeIntervalMilliseconds = 1000 * 60 * 2;
     private double scavengeRatio = 0.5; // avoid cleaning up all connections in the pool at the same time
-    private long shutdownWaitMilliseconds = 1000 * 30;
+    private int shutdownWaitMilliseconds = 1000 * 30;
 
     public int getMaxWaitMilliseconds() {
         return maxWaitMilliseconds;
@@ -102,7 +102,7 @@ public class PoolConfig {
         return this;
     }
 
-    public long getShutdownWaitMilliseconds() {
+    public int getShutdownWaitMilliseconds() {
         return shutdownWaitMilliseconds;
     }
 
@@ -113,7 +113,7 @@ public class PoolConfig {
      * the pool will be shut down with leaked objects.
      * @param shutdownWaitMilliseconds default to 30 seconds for each partition
      */
-    public void setShutdownWaitMilliseconds(long shutdownWaitMilliseconds) {
+    public void setShutdownWaitMilliseconds(int shutdownWaitMilliseconds) {
         this.shutdownWaitMilliseconds = shutdownWaitMilliseconds;
     }
 }
