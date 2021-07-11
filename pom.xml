@@ -76,7 +76,7 @@
 			<groupId>com.github.chrisvest</groupId>
 			<artifactId>stormpot</artifactId>
 			<scope>test</scope> <!-- benchmark only -->
-			<version>2.4</version>
+			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>nf.fr.eraasoft</groupId>
