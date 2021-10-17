@@ -1,0 +1,8 @@
+Features:
+- Now we have PoolInvalidObjectException and PoolExhaustedException.
+
+Fixes:
+- Disable the scavanger: https://github.com/DanielYWoo/fast-object-pool/pull/39
+
+Others:
+- Better SonarQube reports
