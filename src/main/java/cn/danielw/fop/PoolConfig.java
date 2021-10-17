@@ -77,9 +77,9 @@ public class PoolConfig {
      * @return the pool config
      */
     public PoolConfig setScavengeIntervalMilliseconds(int scavengeIntervalMilliseconds) {
-        if (scavengeIntervalMilliseconds < 5000) {
+        if (scavengeIntervalMilliseconds != 0 && scavengeIntervalMilliseconds < 5000) {
             throw new IllegalArgumentException("Cannot set interval too short (" + scavengeIntervalMilliseconds +
-                    "), must be at least 5 seconds");
+                    "), must be at least 5 seconds, or zero to disable scavenger");
         }
         this.scavengeIntervalMilliseconds = scavengeIntervalMilliseconds;
         return this;
