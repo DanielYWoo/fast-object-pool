@@ -115,6 +115,9 @@ public class PoolConfig {
      * @param shutdownWaitMilliseconds default to 30 seconds for each partition
      */
     public void setShutdownWaitMilliseconds(int shutdownWaitMilliseconds) {
+        if (shutdownWaitMilliseconds < 0) {
+            throw new IllegalArgumentException("cannot set negative timeout:" + shutdownWaitMilliseconds);
+        }
         this.shutdownWaitMilliseconds = shutdownWaitMilliseconds;
     }
 }

@@ -35,7 +35,15 @@ public class PoolConfigTest {
         assertThrows(IllegalArgumentException.class, () -> c.setScavengeRatio(-0.1));
         assertThrows(IllegalArgumentException.class, () -> c.setScavengeRatio(0));
         assertThrows(IllegalArgumentException.class, () -> c.setScavengeRatio(1.1));
+    }
 
+    @Test
+    public void testShutdown() {
+        PoolConfig c = new PoolConfig();
+        assertEquals(1000 * 30, c.getShutdownWaitMilliseconds());
+        c.setShutdownWaitMilliseconds(1000 * 40);
+        assertEquals(1000 * 40, c.getShutdownWaitMilliseconds());
+        assertThrows(IllegalArgumentException.class, () -> c.setShutdownWaitMilliseconds(-1000));
     }
 
 }
