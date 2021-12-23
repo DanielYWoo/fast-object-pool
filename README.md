@@ -126,14 +126,6 @@ To use this project, simply add this to your pom.xml
 
 If you want disruptor object pool, add this optional dependency
 
-JDK 8,9,10
-```xml
-<dependency>
-    <groupId>com.conversantmedia</groupId>
-    <artifactId>disruptor</artifactId>
-    <version>1.2.15</version>
-</dependency>
-```
 JDK 11+
 ```xml
 <dependency>
@@ -143,4 +135,13 @@ JDK 11+
 </dependency>
 ```
 
-JDK 8/11 is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However we have two optional dependencies, disruptor and SLF4j.
+Older JDKs 8,9,10
+```xml
+<dependency>
+    <groupId>com.conversantmedia</groupId>
+    <artifactId>disruptor</artifactId>
+    <version>1.2.15</version>
+</dependency>
+```
+
+JDK 8+ is required. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However we have two optional dependencies, disruptor and SLF4j.
