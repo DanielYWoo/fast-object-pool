@@ -100,6 +100,8 @@ Older JDKs like 8/9/10 can also use disruptor but with an older version 1.2.15.
 </dependency>
 ```
 
+If you use slf4j, you can optionally add jul-to-slf4j to your dependency to bridge the JDK logger to slf4j. 
+
 How it works
 --------------
 The pool will create multiple partitions, in most cases a thread always access a specified partition, 
