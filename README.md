@@ -71,8 +71,7 @@ pool.shutdown();
 
 Maven dependency
 ---------------
-JDK 11+ is recommended. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. The only optional dependencies is disruptor. To use FOP, simply add this to your pom.xml
-
+To use FOP, simply add this to your pom.xml
 ```xml
 <dependency>
     <groupId>cn.danielw</groupId>
@@ -81,7 +80,8 @@ JDK 11+ is recommended. By default the debug messages are logged to JDK logger b
 </dependency>
 ```
 
-If you want best performance, you need add disruptor to your dependency, and use DisruptorObjectPool instead of ObjectPool. 
+If you want best performance, you can optionally add disruptor to your dependency, and use DisruptorObjectPool instead of ObjectPool. (recommended)
+
 For JDK 11+, use the dependency below.
 ```xml
 <dependency>
@@ -100,7 +100,9 @@ Older JDKs like 8/9/10 can also use disruptor but with an older version 1.2.15.
 </dependency>
 ```
 
-If you use slf4j, you can optionally add jul-to-slf4j to your dependency to bridge the JDK logger to slf4j. 
+Logging
+--------------
+One of the design goals of FOP is zero dependency, so we use JDK logger by default. If you use slf4j, you can optionally add jul-to-slf4j to your dependency to bridge the JDK logger to slf4j. 
 
 How it works
 --------------
