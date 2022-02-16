@@ -3,7 +3,7 @@
 
 fast-object-pool
 ================
-FOP, a lightweight partitioned object pool, you can use it to pool expensive and non-thread-safe objects like thrift clients etc.
+FOP, a lightweight high performance object pool optimized for concurrent accesses, you can use it to pool expensive and non-thread-safe objects like thrift clients etc.
 
 Github repo: [https://github.com/DanielYWoo/fast-object-pool](https://github.com/DanielYWoo/fast-object-pool)
 
@@ -14,8 +14,8 @@ Why yet another object pool
 
 FOP is implemented with partitions to avoid thread contention, the performance test shows it's much faster than Apache commons-pool. 
 This project is not to replace Apache commons-pool, this project does not provide rich features like commons-pool, this project mainly aims on:
-1. Zero dependency
-2. High throughput with many concurrent requests
+1. Zero dependency (the only optional dependency is disrutpor)
+2. High throughput with many concurrent requests/threads
 3. Less code so everybody can read it and understand it.
 
 Configuration
@@ -30,7 +30,6 @@ config.setMaxSize(10);
 config.setMinSize(5);
 config.setMaxIdleMilliseconds(60 * 1000 * 5);
 ```
-
 
 The code above means the pool will have at least 5x5=25 objects, at most 5x10=50 objects, if an object has not been used over 5 minutes it could be removed.
 
@@ -62,9 +61,6 @@ try (Poolable<Connection> obj = pool.borrowObject()) {
 }
 ```
 
-If you want best performance, you need add disruptor queue to your dependency and use DisruptorObjectPool. 
-Note, the DisruptorPool has not been fully tested in production yet.
-
 Shut it down
 
 
@@ -73,13 +69,44 @@ pool.shutdown();
 
 ```
 
+Maven dependency
+---------------
+JDK 11+ is recommended. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. The only optional dependencies is disruptor. To use FOP, simply add this to your pom.xml
+
+```xml
+<dependency>
+    <groupId>cn.danielw</groupId>
+    <artifactId>fast-object-pool</artifactId>
+    <version>2.2.0</version>
+</dependency>
+```
+
+If you want best performance, you need add disruptor to your dependency, and use DisruptorObjectPool instead of ObjectPool. 
+For JDK 11+, use the dependency below.
+```xml
+<dependency>
+    <groupId>com.conversantmedia</groupId>
+    <artifactId>disruptor</artifactId>
+    <version>1.2.19</version>
+</dependency>
+```
+
+Older JDKs like 8/9/10 can also use disruptor but with an older version 1.2.15.
+```xml
+<dependency>
+    <groupId>com.conversantmedia</groupId>
+    <artifactId>disruptor</artifactId>
+    <version>1.2.15</version>
+</dependency>
+```
+
 How it works
 --------------
 The pool will create multiple partitions, in most cases a thread always access a specified partition, 
 so the more partitions you have, the less probability you run into thread contentions. Each partition has a 
 blocking queue to hold poolable objects; to borrow an object, the first object in the queue will be removed; 
 returning an object will append that object to the end of the queue. The idea is from ConcurrentHashMap's segments 
-design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without any problem.
+design and BoneCP connection pool's partition design. This project started since 2013 and has been deployed to many projects without any problems.
 
 How fast it is
 --------------
@@ -111,35 +138,3 @@ I don't know why Stormpot degrade so fast with two borrows in one thread. If you
 
 So, in short, if you can ensure borrow at most one object in each thread, Stormpot is the best choice. If you cannot ensure that, use FOP which is more consistent in all scenarios.
 
-Maven dependency
----------------
-To use this project, simply add this to your pom.xml
-
-
-```xml
-<dependency>
-    <groupId>cn.danielw</groupId>
-    <artifactId>fast-object-pool</artifactId>
-    <version>2.2.0</version>
-</dependency>
-```
-
-You can use disruptor as an optional dependency to boost the performance (JDK 11+)
-```xml
-<dependency>
-    <groupId>com.conversantmedia</groupId>
-    <artifactId>disruptor</artifactId>
-    <version>1.2.19</version>
-</dependency>
-```
-
-Older JDKs like 8/9/10 can also use disruptor but with an older version 1.2.15.
-```xml
-<dependency>
-    <groupId>com.conversantmedia</groupId>
-    <artifactId>disruptor</artifactId>
-    <version>1.2.15</version>
-</dependency>
-```
-
-JDK 11+ is recommended. By default the debug messages are logged to JDK logger because one of the goals of this project is ZERO DEPENDENCY. However we have two optional dependencies, disruptor and SLF4j.
