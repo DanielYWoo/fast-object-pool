@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/DanielYWoo/fast-object-pool.svg?branch=master)](https://travis-ci.com/github/DanielYWoo/fast-object-pool)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DanielYWoo_fast-object-pool&metric=alert_status)](https://sonarcloud.io/dashboard?id=DanielYWoo_fast-object-pool)
+[中文文档](/README_cn.md)
 
 fast-object-pool
 ================
