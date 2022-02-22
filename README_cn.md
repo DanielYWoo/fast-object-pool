@@ -70,7 +70,7 @@ Maven dependency
 </dependency>
 ```
 
-如果您想要获得最佳性能，您可以选择将Disruptor添加到您的依赖项中，并使用 DisruptorObjectPool 而不是 ObjectPool（推荐）。
+如果您想要获得最佳性能，您可以选择将Disruptor添加到您的依赖项中，并使用 DisruptorObjectPool 而不是 ObjectPool。
 
 
 For JDK 11+, 使用以下Disruptor依赖.
