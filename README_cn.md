@@ -62,33 +62,45 @@ pool.shutdown();
 
 Maven dependency
 ---------------
-```xml
+```
+Maven:
 <dependency>
     <groupId>cn.danielw</groupId>
     <artifactId>fast-object-pool</artifactId>
     <version>2.2.0</version>
 </dependency>
+
+Gradle:
+implementation 'cn.danielw:fast-object-pool:2.2.0'
 ```
 
 如果您想要获得最佳性能，您可以选择将Disruptor添加到您的依赖项中，并使用 DisruptorObjectPool 而不是 ObjectPool。
 
 
 For JDK 11+, 使用以下Disruptor依赖.
-```xml
+```
+Maven:
 <dependency>
     <groupId>com.conversantmedia</groupId>
     <artifactId>disruptor</artifactId>
     <version>1.2.19</version>
 </dependency>
+
+Gradle:
+implementation 'com.conversantmedia:disruptor:1.2.19'
 ```
 
 8/9/10 这样的旧 JDK 必须使用旧版本的Disruptor 1.2.15。
-```xml
+```
+Maven:
 <dependency>
     <groupId>com.conversantmedia</groupId>
     <artifactId>disruptor</artifactId>
     <version>1.2.15</version>
 </dependency>
+
+Gradle:
+implementation 'com.conversantmedia:disruptor:1.2.15'
 ```
 
 Logging

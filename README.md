@@ -72,33 +72,45 @@ pool.shutdown();
 
 Maven dependency
 ---------------
-To use FOP, simply add this to your pom.xml
-```xml
+To use FOP, simply add the dependency below. 
+```
+Maven:
 <dependency>
     <groupId>cn.danielw</groupId>
     <artifactId>fast-object-pool</artifactId>
     <version>2.2.0</version>
 </dependency>
+
+Gradle:
+implementation 'cn.danielw:fast-object-pool:2.2.0'
 ```
 
 If you want best performance, you can optionally add disruptor to your dependency, and use DisruptorObjectPool instead of ObjectPool. (recommended)
 
 For JDK 11+, use the dependency below.
-```xml
+```
+Maven:
 <dependency>
     <groupId>com.conversantmedia</groupId>
     <artifactId>disruptor</artifactId>
     <version>1.2.19</version>
 </dependency>
+
+Gradle:
+implementation 'com.conversantmedia:disruptor:1.2.19'
 ```
 
 Older JDKs like 8/9/10 can also use disruptor but with an older version 1.2.15.
-```xml
+```
+Maven:
 <dependency>
     <groupId>com.conversantmedia</groupId>
     <artifactId>disruptor</artifactId>
     <version>1.2.15</version>
 </dependency>
+
+Gradle:
+implementation 'com.conversantmedia:disruptor:1.2.15'
 ```
 
 Logging
