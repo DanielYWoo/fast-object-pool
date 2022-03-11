@@ -11,25 +11,48 @@ import java.util.logging.Logger;
  */
 public class ObjectPool<T> {
 
-    private static final Logger logger = Logger.getLogger(ObjectPool.class.getCanonicalName());
+    protected static final Logger logger = Logger.getLogger(ObjectPool.class.getCanonicalName());
 
-    private final PoolConfig config;
-    private final ObjectFactory<T> factory;
-    private final ObjectPoolPartition<T>[] partitions;
-    private Scavenger scavenger;
-    private volatile boolean shuttingDown;
+    protected final PoolConfig config;
+    protected final ObjectFactory<T> factory;
+    protected final ObjectPoolPartition<T>[] partitions;
+    protected Scavenger scavenger;
+    protected volatile boolean shuttingDown;
+    protected boolean isInit = false;
 
     public ObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory) {
+        this(poolConfig, objectFactory, true);
+    }
+
+    public ObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory, boolean init) {
         this.config = poolConfig;
         this.factory = objectFactory;
         this.partitions = new ObjectPoolPartition[config.getPartitionSize()];
+        if (init) {
+            initUnsafe();
+        }
+    }
+
+    public final synchronized void init() {
+        if (isInit) {
+            throw new IllegalStateException("Pool is already init");
+        }
+        initUnsafe();
+    }
+
+    protected void initUnsafe() {
         for (int i = 0; i < config.getPartitionSize(); i++) {
-            partitions[i] = new ObjectPoolPartition<>(this, i, config, objectFactory, createBlockingQueue(poolConfig));
+            partitions[i] = new ObjectPoolPartition<>(this, i, config, factory, createBlockingQueue(config));
         }
         if (config.getScavengeIntervalMilliseconds() > 0) {
             this.scavenger = new Scavenger();
             this.scavenger.start();
         }
+        isInit = true;
+    }
+
+    public final synchronized boolean isInit() {
+        return isInit;
     }
 
     protected BlockingQueue<Poolable<T>> createBlockingQueue(PoolConfig poolConfig) {
