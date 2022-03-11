@@ -78,7 +78,7 @@ public class ObjectPool<T> {
     public Poolable<T> borrowObject(boolean noTimeout) {
         for (int i = 0; i < 3; i++) { // try at most three times
             Poolable<T> result = getObject(noTimeout);
-            if (factory.validate(result.getObject())) {
+            if (factory.validate(result)) {
                 return result;
             } else {
                 logger.warning("Invalid object found in the pool, destroy it: " + result.getObject());

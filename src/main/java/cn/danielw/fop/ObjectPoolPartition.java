@@ -27,7 +27,7 @@ public class ObjectPoolPartition<T> {
         this.partition = partition;
         this.objectQueue = queue;
         for (int i = 0; i < config.getMinPartitionSize(); i++) {
-            objectQueue.add(new Poolable<>(objectFactory.create(), pool, partition));
+            objectQueue.add(objectFactory.create(pool, partition));
         }
         totalCount = config.getMinPartitionSize();
     }
@@ -47,7 +47,7 @@ public class ObjectPoolPartition<T> {
         }
         try {
             for (int i = 0; i < delta; i++) {
-                objectQueue.put(new Poolable<>(objectFactory.create(), pool, partition));
+                objectQueue.put(objectFactory.create(pool, partition));
             }
             totalCount += delta;
             if (logger.isLoggable(Level.FINE))
