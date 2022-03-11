@@ -195,6 +195,10 @@ public class ObjectPool<T> {
         return size;
     }
 
+    public int getMaxSize() {
+        return config.getPartitionsCount()*config.getMaxPartitionSize();
+    }
+
     public synchronized int shutdown() throws InterruptedException {
         shuttingDown = true;
         int removed = 0;
