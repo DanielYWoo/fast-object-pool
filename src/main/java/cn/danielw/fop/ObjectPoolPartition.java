@@ -26,10 +26,10 @@ public class ObjectPoolPartition<T> {
         this.objectFactory = objectFactory;
         this.partition = partition;
         this.objectQueue = queue;
-        for (int i = 0; i < config.getMinSize(); i++) {
+        for (int i = 0; i < config.getMinPartitionSize(); i++) {
             objectQueue.add(new Poolable<>(objectFactory.create(), pool, partition));
         }
-        totalCount = config.getMinSize();
+        totalCount = config.getMinPartitionSize();
     }
 
     public BlockingQueue<Poolable<T>> getObjectQueue() {
@@ -42,8 +42,8 @@ public class ObjectPoolPartition<T> {
      */
     @SuppressWarnings({"java:S112", "java:S2142"})
     public synchronized int increaseObjects(int delta) {
-        if (delta + totalCount > config.getMaxSize()) {
-            delta = config.getMaxSize() - totalCount;
+        if (delta + totalCount > config.getMaxPartitionSize()) {
+            delta = config.getMaxPartitionSize() - totalCount;
         }
         try {
             for (int i = 0; i < delta; i++) {
@@ -70,7 +70,7 @@ public class ObjectPoolPartition<T> {
 
     // set the scavenge interval carefully
     public synchronized void scavenge() throws InterruptedException {
-        int delta = this.totalCount - config.getMinSize();
+        int delta = this.totalCount - config.getMinPartitionSize();
         if (delta <= 0) return;
         int removed = 0;
         long now = System.currentTimeMillis();

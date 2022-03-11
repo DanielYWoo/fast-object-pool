@@ -27,7 +27,7 @@ public class ObjectPool<T> {
     public ObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory, boolean init) {
         this.config = poolConfig;
         this.factory = objectFactory;
-        this.partitions = new ObjectPoolPartition[config.getPartitionSize()];
+        this.partitions = new ObjectPoolPartition[config.getPartitionsCount()];
         if (init) {
             initUnsafe();
         }
@@ -41,7 +41,7 @@ public class ObjectPool<T> {
     }
 
     protected void initUnsafe() {
-        for (int i = 0; i < config.getPartitionSize(); i++) {
+        for (int i = 0; i < config.getPartitionsCount(); i++) {
             partitions[i] = new ObjectPoolPartition<>(this, i, config, factory, createBlockingQueue(config));
         }
         if (config.getScavengeIntervalMilliseconds() > 0) {
@@ -56,7 +56,7 @@ public class ObjectPool<T> {
     }
 
     protected BlockingQueue<Poolable<T>> createBlockingQueue(PoolConfig poolConfig) {
-        return new ArrayBlockingQueue<>(poolConfig.getMaxSize());
+        return new ArrayBlockingQueue<>(poolConfig.getMaxPartitionSize());
     }
 
     /**
@@ -93,7 +93,7 @@ public class ObjectPool<T> {
         if (shuttingDown) {
             throw new IllegalStateException("Your pool is shutting down");
         }
-        int partition = (int) (Thread.currentThread().getId() % this.config.getPartitionSize());
+        int partition = (int) (Thread.currentThread().getId() % this.config.getPartitionsCount());
         ObjectPoolPartition<T> subPool = this.partitions[partition];
         Poolable<T> freeObject;
         do { // loop to ensure: if T1 increases an object but T2 takes it, then T1 can poll and increase it again
@@ -166,7 +166,7 @@ public class ObjectPool<T> {
                 try {
                     //noinspection BusyWait
                     Thread.sleep(config.getScavengeIntervalMilliseconds());
-                    partition = ++partition % config.getPartitionSize();
+                    partition = ++partition % config.getPartitionsCount();
                     if (logger.isLoggable(Level.FINE)) {
                         logger.fine("scavenge sub pool " + partition);
                     }

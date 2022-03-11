@@ -12,7 +12,7 @@ public class DisruptorObjectPool<T> extends ObjectPool<T> {
 
     @Override
     protected BlockingQueue<Poolable<T>> createBlockingQueue(PoolConfig config) {
-        return new DisruptorBlockingQueue<>(config.getMaxSize());
+        return new DisruptorBlockingQueue<>(config.getMaxPartitionSize());
     }
 
 }

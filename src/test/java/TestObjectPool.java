@@ -18,7 +18,7 @@ public class TestObjectPool {
         Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
         Logger.getLogger("").setLevel(Level.ALL);
         PoolConfig config = new PoolConfig();
-        config.setPartitionSize(2).setMinSize(2).setMaxSize(20).setMaxIdleMilliseconds(5000).
+        config.setPartitionsCount(2).setMinPartitionSize(2).setMaxPartitionSize(20).setMaxIdleMilliseconds(5000).
                 setMaxWaitMilliseconds(100).setScavengeIntervalMilliseconds(5000).setScavengeRatio(scavengeRatio);
 
         ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {

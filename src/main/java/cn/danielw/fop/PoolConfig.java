@@ -7,9 +7,9 @@ public class PoolConfig {
 
     private int maxWaitMilliseconds = 5000; // when pool is full, wait at most 5 seconds, then throw an exception
     private int maxIdleMilliseconds = 300000; // objects idle for 5 minutes will be destroyed to shrink the pool size
-    private int minSize = 5;
-    private int maxSize = 20;
-    private int partitionSize = 4;
+    private int minPartitionSize = 5;
+    private int maxPartitionSize = 20;
+    private int partitionsCount = 4;
     private int scavengeIntervalMilliseconds = 1000 * 60 * 2;
     private double scavengeRatio = 0.5; // avoid cleaning up all connections in the pool at the same time
     private int shutdownWaitMilliseconds = 1000 * 30;
@@ -31,21 +31,21 @@ public class PoolConfig {
         return this;
     }
 
-    public int getMinSize() {
-        return minSize;
+    public int getMinPartitionSize() {
+        return minPartitionSize;
     }
 
-    public PoolConfig setMinSize(int minSize) {
-        this.minSize = minSize;
+    public PoolConfig setMinPartitionSize(int minPartitionSize) {
+        this.minPartitionSize = minPartitionSize;
         return this;
     }
 
-    public int getMaxSize() {
-        return maxSize;
+    public int getMaxPartitionSize() {
+        return maxPartitionSize;
     }
 
-    public PoolConfig setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
+    public PoolConfig setMaxPartitionSize(int maxPartitionSize) {
+        this.maxPartitionSize = maxPartitionSize;
         return this;
     }
 
@@ -58,12 +58,12 @@ public class PoolConfig {
         return this;
     }
 
-    public int getPartitionSize() {
-        return partitionSize;
+    public int getPartitionsCount() {
+        return partitionsCount;
     }
 
-    public PoolConfig setPartitionSize(int partitionSize) {
-        this.partitionSize = partitionSize;
+    public PoolConfig setPartitionsCount(int partitionsCount) {
+        this.partitionsCount = partitionsCount;
         return this;
     }
 
