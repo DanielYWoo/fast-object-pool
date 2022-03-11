@@ -123,6 +123,57 @@ public class ObjectPool<T> {
         return freeObject;
     }
 
+    /**
+     * borrow a specific object if exists
+     * @return true if obj was removed from queue
+     */
+    public boolean borrowObject(Poolable<T> obj) {
+        return partitions[obj.getPartition()].getObjectQueue().remove(obj);
+    }
+
+    /**
+     * borrow a specific object or throw
+     * @throws IllegalStateException obj is not present in current pool
+     */
+    public void borrowObjectOrThrow(Poolable<T> obj) {
+        if (!borrowObject(obj)) {
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * remove object from pool if exists then destroy
+     * @return true if obj was removed from queue
+     */
+    public boolean decreaseObject(Poolable<T> obj) {
+        boolean exists = partitions[obj.getPartition()].getObjectQueue().remove(obj);
+        partitions[obj.getPartition()].decreaseObject(obj);
+        return exists;
+    }
+
+    /**
+     * remove object from pool and destroy only if exists
+     * @return true if obj was removed from queue
+     */
+    public boolean decreaseObjectIfExists(Poolable<T> obj) {
+        if (partitions[obj.getPartition()].getObjectQueue().remove(obj)) {
+            partitions[obj.getPartition()].decreaseObject(obj);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * remove object from pool if exists then destroy or throw
+     * @throws IllegalStateException obj is not present in current pool
+     */
+    public void decreaseObjectIfExistsElseThrow(Poolable<T> obj) {
+        if( !partitions[obj.getPartition()].getObjectQueue().remove(obj) ) {
+            throw new IllegalStateException();
+        }
+        partitions[obj.getPartition()].decreaseObject(obj);
+    }
+
     @SuppressWarnings({"java:S112", "java:S2142"})
     public void returnObject(Poolable<T> obj) {
         ObjectPoolPartition<T> subPool = this.partitions[obj.getPartition()];

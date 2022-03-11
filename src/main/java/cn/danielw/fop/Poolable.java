@@ -34,6 +34,26 @@ public class Poolable<T> implements AutoCloseable {
         pool.returnObject(this);
     }
 
+    public boolean borrowObject() {
+        return pool.borrowObject(this);
+    }
+
+    public void borrowObjectOrThrow() {
+        pool.borrowObjectOrThrow(this);
+    }
+
+    public void decreaseObject() {
+        pool.decreaseObject(this);
+    }
+
+    public boolean decreaseObjectIfExists() {
+        return pool.decreaseObjectIfExists(this);
+    }
+
+    public void decreaseObjectIfExistsElseThrow() {
+        pool.decreaseObjectIfExistsElseThrow(this);
+    }
+
     public long getLastAccessTs() {
         return lastAccessTs;
     }
