@@ -1,164 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<name>Fast Object Pool</name>
-	<url>https://github.com/DanielYWoo/fast-object-pool</url>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>cn.danielw</groupId>
-	<artifactId>fast-object-pool</artifactId>
-	<packaging>jar</packaging>
-	<version>2.2.0</version>
-	<description>An extremely fast object pool with zero dependencies</description>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sonar.projectKey>DanielYWoo_fast-object-pool</sonar.projectKey>
-    <sonar.organization>danielywoo1</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-  </properties>
+    <name>Fast Object Pool</name>
+    <url>https://github.com/DanielYWoo/fast-object-pool</url>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cn.danielw</groupId>
+    <artifactId>fast-object-pool</artifactId>
+    <packaging>jar</packaging>
+    <version>2.2.0</version>
+    <description>An extremely fast object pool with zero dependencies</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.projectKey>DanielYWoo_fast-object-pool</sonar.projectKey>
+        <sonar.organization>danielywoo1</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
 
-	<developers>
-		<developer>
-			<id>Daniel</id>
-			<name>Daniel</name>
-			<email>daniel.y.woo@gmail.com</email>
-			<url>https://github.com/DanielYWoo</url>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>Daniel</id>
+            <name>Daniel</name>
+            <email>daniel.y.woo@gmail.com</email>
+            <url>https://github.com/DanielYWoo</url>
+        </developer>
+    </developers>
 
-	<licenses>
-		<license>
-			<name>BSDLicense</name>
-			<url>http://www.opensource.org/licenses/bsd-license.php</url>
-    </license>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>BSDLicense</name>
+            <url>http://www.opensource.org/licenses/bsd-license.php</url>
+        </license>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
-	<issueManagement>
-		<system>Github</system>
-		<url>https://github.com/DanielYWoo/fast-object-pool/issues?state=open</url>
-	</issueManagement>
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/DanielYWoo/fast-object-pool/issues?state=open</url>
+    </issueManagement>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.conversantmedia</groupId>
-			<artifactId>disruptor</artifactId>
-			<version>1.2.15</version>
-			<!-- This is optional, if you want the best performance you need to manually add disruptor into your dependency -->
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-			<version>4.13.2</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.conversantmedia</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>1.2.15</version>
+            <!-- This is optional, if you want the best performance you need to manually add disruptor into your dependency -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <version>4.13.2</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
             <scope>test</scope> <!-- benchmark only -->
             <version>2.11.1</version>
         </dependency>
-		<dependency>
-			<groupId>com.github.chrisvest</groupId>
-			<artifactId>stormpot</artifactId>
-			<scope>test</scope> <!-- benchmark only -->
-			<version>2.4</version>
-		</dependency>
-		<dependency>
-			<groupId>nf.fr.eraasoft</groupId>
-			<artifactId>objectpool</artifactId>
-			<scope>test</scope> <!-- benchmark only -->
-			<version>1.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jacoco</groupId>
-      <artifactId>jacoco-maven-plugin</artifactId>
-      <version>0.8.6</version>
-      <type>maven-plugin</type>
-    </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.github.chrisvest</groupId>
+            <artifactId>stormpot</artifactId>
+            <scope>test</scope> <!-- benchmark only -->
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>nf.fr.eraasoft</groupId>
+            <artifactId>objectpool</artifactId>
+            <scope>test</scope> <!-- benchmark only -->
+            <version>1.1.2</version>
+        </dependency>
+    </dependencies>
 
-	<scm>
-		<url>https://github.com/DanielYWoo/fast-object-pool</url>
-		<connection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</connection>
-		<developerConnection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</developerConnection>
-	</scm>
+    <scm>
+        <url>https://github.com/DanielYWoo/fast-object-pool</url>
+        <connection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</connection>
+        <developerConnection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</developerConnection>
+    </scm>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.0</version>
-				<configuration>
-					<source>8</source>
-					<target>8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.3.2</version>
-				<configuration>
-					<source>8</source>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.6</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.0</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <source>8</source>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
