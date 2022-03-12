@@ -1,0 +1,8 @@
+Features:
+- N/A
+
+Fixes:
+- Remove useless dependency:https://github.com/DanielYWoo/fast-object-pool/issues/51
+
+Others:
+- Better doc and unit test
