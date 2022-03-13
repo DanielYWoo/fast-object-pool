@@ -67,11 +67,11 @@ Maven:
 <dependency>
     <groupId>cn.danielw</groupId>
     <artifactId>fast-object-pool</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 
 Gradle:
-implementation 'cn.danielw:fast-object-pool:2.2.0'
+implementation 'cn.danielw:fast-object-pool:2.2.1'
 ```
 
 如果您想要获得最佳性能，您可以选择将Disruptor添加到您的依赖项中，并使用 DisruptorObjectPool 而不是 ObjectPool。
@@ -105,7 +105,7 @@ implementation 'com.conversantmedia:disruptor:1.2.15'
 
 Logging
 --------------
-FOP 的设计目标之一是零依赖，所以我们默认使用 JDK logger。如果您使用 slf4j，您可以选择将 jul-to-slf4j 添加到您的依赖项中，以将 JDK 记录器桥接到 slf4j。
+FOP 的设计目标之一是零依赖，所以默认使用 JDK logger。如果您使用 slf4j，您可以选择将 jul-to-slf4j 添加到您的依赖项中，以将 JDK 记录器桥接到 slf4j。
 
 工作原理
 --------------
