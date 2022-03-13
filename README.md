@@ -78,11 +78,11 @@ Maven:
 <dependency>
     <groupId>cn.danielw</groupId>
     <artifactId>fast-object-pool</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 
 Gradle:
-implementation 'cn.danielw:fast-object-pool:2.2.0'
+implementation 'cn.danielw:fast-object-pool:2.2.1'
 ```
 
 If you want best performance, you can optionally add disruptor to your dependency, and use DisruptorObjectPool instead of ObjectPool. (recommended)
