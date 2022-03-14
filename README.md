@@ -26,9 +26,9 @@ First of all you need to create a FOP config:
 
 ```java
 PoolConfig config = new PoolConfig();
-config.setPartitionSize(5);
-config.setMaxSize(10);
-config.setMinSize(5);
+config.setPartitionsCount(5);
+config.setMaxPartitionSize(10);
+config.setMinPartitionSize(5);
 config.setMaxIdleMilliseconds(60 * 1000 * 5);
 ```
 
@@ -68,21 +68,6 @@ Shut it down
 ```java
 pool.shutdown();
 
-```
-
-Maven dependency
----------------
-To use FOP, simply add the dependency below. 
-```
-Maven:
-<dependency>
-    <groupId>cn.danielw</groupId>
-    <artifactId>fast-object-pool</artifactId>
-    <version>2.2.0</version>
-</dependency>
-
-Gradle:
-implementation 'cn.danielw:fast-object-pool:2.2.0'
 ```
 
 If you want best performance, you can optionally add disruptor to your dependency, and use DisruptorObjectPool instead of ObjectPool. (recommended)
