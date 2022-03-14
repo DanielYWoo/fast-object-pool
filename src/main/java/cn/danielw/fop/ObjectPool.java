@@ -14,17 +14,17 @@ public class ObjectPool<T> {
     protected static final Logger logger = Logger.getLogger(ObjectPool.class.getCanonicalName());
 
     protected final PoolConfig config;
-    protected final ObjectFactory<T> factory;
+    protected final ObjectFactoryRaw<T> factory;
     protected final ObjectPoolPartition<T>[] partitions;
     protected Scavenger scavenger;
     protected volatile boolean shuttingDown;
     protected boolean isInit = false;
 
-    public ObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory) {
+    public ObjectPool(PoolConfig poolConfig, ObjectFactoryRaw<T> objectFactory) {
         this(poolConfig, objectFactory, true);
     }
 
-    public ObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory, boolean init) {
+    public ObjectPool(PoolConfig poolConfig, ObjectFactoryRaw<T> objectFactory, boolean init) {
         this.config = poolConfig;
         this.factory = objectFactory;
         this.partitions = new ObjectPoolPartition[config.getPartitionsCount()];

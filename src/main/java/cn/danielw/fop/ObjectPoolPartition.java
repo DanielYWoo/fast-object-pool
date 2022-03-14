@@ -16,11 +16,11 @@ public class ObjectPoolPartition<T> {
     private final PoolConfig config;
     private final int partition;
     private final BlockingQueue<Poolable<T>> objectQueue;
-    private final ObjectFactory<T> objectFactory;
+    private final ObjectFactoryRaw<T> objectFactory;
     private int totalCount;
 
     public ObjectPoolPartition(ObjectPool<T> pool, int partition, PoolConfig config,
-                               ObjectFactory<T> objectFactory, BlockingQueue<Poolable<T>> queue) {
+                               ObjectFactoryRaw<T> objectFactory, BlockingQueue<Poolable<T>> queue) {
         this.pool = pool;
         this.config = config;
         this.objectFactory = objectFactory;
@@ -59,7 +59,7 @@ public class ObjectPoolPartition<T> {
     }
 
     public synchronized boolean decreaseObject(Poolable<T> obj) {
-        objectFactory.destroy(obj.getObject());
+        objectFactory.destroy(obj);
         totalCount--;
         return true;
     }

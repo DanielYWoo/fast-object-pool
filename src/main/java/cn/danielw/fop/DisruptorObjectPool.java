@@ -6,7 +6,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class DisruptorObjectPool<T> extends ObjectPool<T> {
 
-    public DisruptorObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory) {
+    public DisruptorObjectPool(PoolConfig poolConfig, ObjectFactoryRaw<T> objectFactory) {
         super(poolConfig, objectFactory);
     }
 
