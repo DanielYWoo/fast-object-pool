@@ -79,6 +79,7 @@ public class ObjectPool<T> {
         for (int i = 0; i < 3; i++) { // try at most three times
             Poolable<T> result = getObject(noTimeout);
             if (factory.validate(result)) {
+                factory.restore(result);
                 return result;
             } else {
                 logger.warning("Invalid object found in the pool, destroy it: " + result.getObject());
@@ -128,7 +129,11 @@ public class ObjectPool<T> {
      * @return true if obj was removed from queue
      */
     public boolean borrowObject(Poolable<T> obj) {
-        return partitions[obj.getPartition()].getObjectQueue().remove(obj);
+        if (partitions[obj.getPartition()].getObjectQueue().remove(obj)) {
+            factory.restore(obj);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -176,6 +181,7 @@ public class ObjectPool<T> {
 
     @SuppressWarnings({"java:S112", "java:S2142"})
     public void returnObject(Poolable<T> obj) {
+        factory.recycle(obj);
         ObjectPoolPartition<T> subPool = this.partitions[obj.getPartition()];
         try {
             subPool.getObjectQueue().put(obj);

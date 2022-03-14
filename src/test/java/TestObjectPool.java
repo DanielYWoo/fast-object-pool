@@ -28,6 +28,14 @@ public class TestObjectPool {
             }
 
             @Override
+            public void recycle(StringBuilder stringBuilder) {
+            }
+
+            @Override
+            public void restore(StringBuilder stringBuilder) {
+            }
+
+            @Override
             public void destroy(StringBuilder o) {
             }
 

@@ -15,6 +15,18 @@ public interface ObjectFactory<T> extends ObjectFactoryRaw<T> {
     T create();
 
     @Override
+    default void recycle(Poolable<T> poolable) {
+        recycle(poolable.getObject());
+    }
+    void recycle(T t);
+
+    @Override
+    default void restore(Poolable<T> poolable) {
+        restore(poolable.getObject());
+    }
+    void restore(T t);
+
+    @Override
     default void destroy(Poolable<T> poolable) {
         destroy(poolable.getObject());
     }
@@ -25,5 +37,4 @@ public interface ObjectFactory<T> extends ObjectFactoryRaw<T> {
         return validate(poolable.getObject());
     }
     boolean validate(T t);
-
 }
