@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+>
 	<name>Fast Object Pool</name>
-	<url>https://github.com/DanielYWoo/fast-object-pool</url>
+	<url>https://github.com/pro100kryto/fast-object-pool</url>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.danielw</groupId>
 	<artifactId>fast-object-pool</artifactId>
 	<packaging>jar</packaging>
-	<version>2.2.0</version>
+	<version>2.3.0-p1k</version>
 	<description>An extremely fast object pool with zero dependencies</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,6 +22,12 @@
 			<name>Daniel</name>
 			<email>daniel.y.woo@gmail.com</email>
 			<url>https://github.com/DanielYWoo</url>
+		</developer>
+		<developer>
+			<id>pro100kryto</id>
+			<name>pro100kryto</name>
+			<email>pro100kryto.original@gmail.com</email>
+			<url>https://github.com/pro100kryto</url>
 		</developer>
 	</developers>
 
@@ -38,7 +44,7 @@
 
 	<issueManagement>
 		<system>Github</system>
-		<url>https://github.com/DanielYWoo/fast-object-pool/issues?state=open</url>
+		<url>https://github.com/pro100kryto/fast-object-pool/issues?state=open</url>
 	</issueManagement>
 
 	<distributionManagement>
@@ -93,9 +99,9 @@
 	</dependencies>
 
 	<scm>
-		<url>https://github.com/DanielYWoo/fast-object-pool</url>
-		<connection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</connection>
-		<developerConnection>scm:git:git@github.com:DanielYWoo/fast-object-pool.git</developerConnection>
+		<url>https://github.com/pro100kryto/fast-object-pool</url>
+		<connection>scm:git:git@github.com:pro100kryto/fast-object-pool.git</connection>
+		<developerConnection>scm:git:git@github.com:pro100kryto/fast-object-pool.git</developerConnection>
 	</scm>
 
 	<build>
