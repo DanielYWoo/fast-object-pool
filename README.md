@@ -31,15 +31,21 @@ Then define how objects will be created and destroyed with ObjectFactory
 
 
 ```java
-ObjectFactory<StringBuilder> factory = new ObjectFactory<>() {
-    @Override public StringBuilder create() {
-        return new StringBuilder(); // create your object here
+ObjectFactory<ByteBuffer> factory = new ObjectFactory<>() {
+    @Override public ByteBuffer create() {
+        return ByteBuffer.allocate(1024); // create your object here
     }
-    @Override public void destroy(StringBuilder o) {
-        // clean up and release resources
+    @override public void recycle(ByteBuffer o) {
+        o.clear(); // clean up before return object to pool
     }
-    @Override public boolean validate(StringBuilder o) {
-        return true; // validate your object here
+    @override public void restore(ByteBuffer o) {
+        o.put(123); // prepare object after borrow
+    }
+    @Override public void destroy(ByteBuffer o) {
+        // release resources
+    }
+    @Override public boolean validate(ByteBuffer o) {
+        return o.position() == 0; // validate your object here
     }
 };
 ```
@@ -60,7 +66,6 @@ Shut it down
 
 ```java
 pool.shutdown();
-
 ```
 
 If you want best performance, you can optionally add disruptor to your dependency, and use DisruptorObjectPool instead of ObjectPool. (recommended)
