@@ -7,7 +7,7 @@
 	<groupId>cn.danielw</groupId>
 	<artifactId>fast-object-pool</artifactId>
 	<packaging>jar</packaging>
-	<version>2.3.0-p1k</version>
+	<version>2.3.1-p1k</version>
 	<description>An extremely fast object pool with zero dependencies</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
