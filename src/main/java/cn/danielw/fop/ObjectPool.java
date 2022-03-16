@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class ObjectPool<T> {
 
-    protected static final Logger logger = Logger.getLogger(ObjectPool.class.getCanonicalName());
+    private static final Logger logger = Logger.getLogger(ObjectPool.class.getCanonicalName());
 
     protected final PoolConfig config;
     protected final ObjectFactory<T> factory;
