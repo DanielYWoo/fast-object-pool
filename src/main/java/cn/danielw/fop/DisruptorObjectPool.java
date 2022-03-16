@@ -10,6 +10,10 @@ public class DisruptorObjectPool<T> extends ObjectPool<T> {
         super(poolConfig, objectFactory);
     }
 
+    public DisruptorObjectPool(PoolConfig poolConfig, ObjectFactory<T> objectFactory, boolean init) {
+        super(poolConfig, objectFactory, init);
+    }
+
     @Override
     protected BlockingQueue<Poolable<T>> createBlockingQueue(PoolConfig config) {
         return new DisruptorBlockingQueue<>(config.getMaxSize());
