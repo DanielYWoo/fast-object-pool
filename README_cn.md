@@ -60,7 +60,7 @@ pool.shutdown();
 
 ```
 
-Maven dependency
+安装使用
 ---------------
 ```
 Maven:
