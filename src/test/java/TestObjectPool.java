@@ -13,7 +13,6 @@ import static org.junit.Assert.assertEquals;
 
 public class TestObjectPool {
 
-
     public ObjectPool<StringBuilder> init(double scavengeRatio) {
         Logger.getLogger("").getHandlers()[0].setLevel(Level.ALL);
         Logger.getLogger("").setLevel(Level.ALL);
