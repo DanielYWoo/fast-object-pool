@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 
+// create a test pool
 public class TestObjectPool {
 
     public ObjectPool<StringBuilder> init(double scavengeRatio) {
