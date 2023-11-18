@@ -42,7 +42,7 @@ public class Benchmark {
             stats += statsAvgRespTime[i];
         }
         double latency = stats / workerCount;
-        System.out.println("Average Response Time:" + new DecimalFormat("0.0000").format(latency));
+//        System.out.println("Average Response Time:" + new DecimalFormat("0.0000").format(latency));
 
         stats = 0;
         for (int i = 0; i < workerCount; i++) {
@@ -52,10 +52,8 @@ public class Benchmark {
 
         double throughput = (double) loop * workerCount / (t2 - t1);
 
-        System.out.println("Error Ratio:" + new DecimalFormat("0.00%").format(errRate));
         System.out.println("Throughput Per Second:" + new DecimalFormat("0").format(throughput) + "K");
-        System.out.println("Objects created:" + created.get());
-        System.out.println();
+//        System.out.println("Objects created:" + created.get());
         return new BenchmarkResult(name, workerCount, borrowsPerLoop, loop, created.get(), errRate, throughput, latency);
     }
 

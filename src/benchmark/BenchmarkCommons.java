@@ -11,21 +11,31 @@ import java.util.List;
  */
 public class BenchmarkCommons extends Benchmark {
 
-    BenchmarkCommons(int workerCount, int borrowsPerLoop, int loop) throws Exception {
+    BenchmarkCommons(int workerCount, int borrowsPerLoop, int loop, int simulateBlockingMs) {
         super("common-pool", workerCount, borrowsPerLoop, loop);
-        GenericObjectPool<StringBuilder> pool = new GenericObjectPool<>(new PooledObjectFactory<StringBuilder>() {
-            @Override public PooledObject<StringBuilder> makeObject() throws Exception {
+        GenericObjectPool<StringBuilder> pool = new GenericObjectPool<>(new PooledObjectFactory<>() {
+            @Override
+            public PooledObject<StringBuilder> makeObject() {
                 created.incrementAndGet();
                 return new DefaultPooledObject<>(new StringBuilder());
             }
 
-            @Override public void destroyObject(PooledObject<StringBuilder> pooledObject) throws Exception { }
+            @Override
+            public void destroyObject(PooledObject<StringBuilder> pooledObject) {
+            }
 
-            @Override public boolean validateObject(PooledObject<StringBuilder> pooledObject) { return false; }
+            @Override
+            public boolean validateObject(PooledObject<StringBuilder> pooledObject) {
+                return false;
+            }
 
-            @Override public void activateObject(PooledObject<StringBuilder> pooledObject) throws Exception { }
+            @Override
+            public void activateObject(PooledObject<StringBuilder> pooledObject) {
+            }
 
-            @Override public void passivateObject(PooledObject<StringBuilder> pooledObject) throws Exception { }
+            @Override
+            public void passivateObject(PooledObject<StringBuilder> pooledObject) {
+            }
         });
         pool.setMinIdle(256);
         pool.setMaxIdle(256);
@@ -34,7 +44,7 @@ public class BenchmarkCommons extends Benchmark {
 
         this.workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, loop, borrowsPerLoop, pool);
+            workers[i] = new Worker(this, i, loop, borrowsPerLoop, simulateBlockingMs, pool);
         }
     }
 
@@ -42,8 +52,8 @@ public class BenchmarkCommons extends Benchmark {
 
         private final GenericObjectPool<StringBuilder> pool;
 
-        Worker(Benchmark benchmark, int id, int loop, int borrowsPerLoop, GenericObjectPool<StringBuilder> pool) {
-            super(benchmark, id, borrowsPerLoop, loop);
+        Worker(Benchmark benchmark, int id, int loop, int borrowsPerLoop, int simulateBlockingMs, GenericObjectPool<StringBuilder> pool) {
+            super(benchmark, id, borrowsPerLoop, loop, simulateBlockingMs);
             this.pool = pool;
         }
 
@@ -52,6 +62,8 @@ public class BenchmarkCommons extends Benchmark {
             try {
                 for (int i = 0; i < borrowsPerLoop; i++) {
                     StringBuilder obj = pool.borrowObject(10);
+                    obj.append("X");
+                    if (simulateBlockingMs > 0) Thread.sleep(simulateBlockingMs); // simulate thread blocking
                     list.add(obj);
                 }
             } catch (Exception e) {

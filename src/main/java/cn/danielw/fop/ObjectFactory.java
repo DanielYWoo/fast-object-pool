@@ -10,8 +10,14 @@ public interface ObjectFactory<T> {
      */
     T create();
 
+    /**
+     * destroy the object gracefully.
+     */
     void destroy(T t);
 
+    /**
+     * validate the object before returning to the consumer. Note, the validation must be fast
+     */
     boolean validate(T t);
 
 }

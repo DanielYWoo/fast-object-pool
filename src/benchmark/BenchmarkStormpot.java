@@ -36,34 +36,25 @@ public class BenchmarkStormpot extends Benchmark {
     }
 
 
-    BenchmarkStormpot(int workerCount, int borrows, int loop) throws InterruptedException {
+    BenchmarkStormpot(int workerCount, int borrows, int loop, int simulateBlockingMs) {
         super("Stormpot", workerCount, borrows, loop);
 
         Config<MyPoolable> config = new Config<>().setAllocator(new Allocator<MyPoolable>() {
             @Override
-            public MyPoolable allocate(Slot slot) throws Exception {
+            public MyPoolable allocate(Slot slot) {
                 created.incrementAndGet();
                 return new MyPoolable(slot);
             }
 
             @Override
-            public void deallocate(MyPoolable x) throws Exception {
+            public void deallocate(MyPoolable x) {
 
             }
         }).setSize(256);
-        /*
-        config.setExpiration(new Expiration<MyPoolable>() {
-            @Override
-            public boolean hasExpired(SlotInfo<? extends MyPoolable> slotInfo) throws Exception {
-                // how to support max idle?
-                return slotInfo.getAgeMillis() > 60 * 10000 * 5;
-            }
-        });
-        */
         Pool<MyPoolable> pool = new BlazePool<>(config);
         workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, borrows, loop, pool);
+            workers[i] = new Worker(this, i, borrows, loop, simulateBlockingMs, pool);
         }
         System.out.println("slots:" + slots.size());
     }
@@ -73,8 +64,8 @@ public class BenchmarkStormpot extends Benchmark {
         private static final Timeout TIMEOUT = new Timeout(10, TimeUnit.MILLISECONDS);
         private final Pool<MyPoolable> pool;
 
-        Worker(Benchmark benchmark, int id, int borrows, int loop, Pool<MyPoolable> pool) {
-            super(benchmark, id, borrows, loop);
+        Worker(Benchmark benchmark, int id, int borrows, int loop, int simulateBlockingMs, Pool<MyPoolable> pool) {
+            super(benchmark, id, borrows, loop, simulateBlockingMs);
             this.pool = pool;
         }
 
@@ -84,6 +75,7 @@ public class BenchmarkStormpot extends Benchmark {
                 for (int i = 0; i < borrowsPerLoop; i++) {
                     MyPoolable obj = pool.claim(TIMEOUT);
                     obj.getTest().append("x");
+                    if (simulateBlockingMs > 0) Thread.sleep(simulateBlockingMs); // simulate thread blocking
                     list.add(obj);
                 }
             } catch (Exception e) {

@@ -1,5 +1,4 @@
 import nf.fr.eraasoft.pool.ObjectPool;
-import nf.fr.eraasoft.pool.PoolException;
 import nf.fr.eraasoft.pool.PoolSettings;
 import nf.fr.eraasoft.pool.PoolableObjectBase;
 
@@ -11,16 +10,17 @@ import java.util.List;
  */
 public class BenchmarkFurious extends Benchmark {
 
-    BenchmarkFurious(int workerCount, int borrows, int loop) throws InterruptedException {
+    BenchmarkFurious(int workerCount, int borrows, int loop, int simulateBlockingMs) {
         super("furious", workerCount, borrows, loop);
 
         // Create your PoolSettings with an instance of PoolableObject
-        PoolSettings<StringBuilder> poolSettings = new PoolSettings<>(new PoolableObjectBase<StringBuilder>() {
+        PoolSettings<StringBuilder> poolSettings = new PoolSettings<>(new PoolableObjectBase<>() {
             @Override
             public StringBuilder make() {
                 created.incrementAndGet();
                 return new StringBuilder();
             }
+
             @Override
             public void activate(StringBuilder t) {
                 t.setLength(0);
@@ -34,7 +34,7 @@ public class BenchmarkFurious extends Benchmark {
 
         workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, borrows, loop, pool);
+            workers[i] = new Worker(this, i, borrows, loop, simulateBlockingMs, pool);
         }
     }
 
@@ -42,8 +42,8 @@ public class BenchmarkFurious extends Benchmark {
 
         private final ObjectPool<StringBuilder> pool;
 
-        Worker(Benchmark benchmark, int id, int borrows, long loop, ObjectPool<StringBuilder> pool) {
-            super(benchmark, id, borrows, loop);
+        Worker(Benchmark benchmark, int id, int borrows, long loop, int simulateBlockingMs, ObjectPool<StringBuilder> pool) {
+            super(benchmark, id, borrows, loop, simulateBlockingMs);
             this.pool = pool;
         }
 
@@ -53,6 +53,7 @@ public class BenchmarkFurious extends Benchmark {
                 for (int i = 0; i < borrowsPerLoop; i++) {
                     StringBuilder obj = pool.getObj(); // NO timeout at method level
                     obj.append("X");
+                    if (simulateBlockingMs > 0) Thread.sleep(simulateBlockingMs); // simulate thread blocking
                     list.add(obj);
                 }
             } catch (Exception e) {

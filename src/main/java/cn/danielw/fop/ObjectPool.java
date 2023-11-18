@@ -32,6 +32,10 @@ public class ObjectPool<T> {
         }
     }
 
+    /**
+     * the pool needs a blocking queue for consumers to wait for an available object. The queue can be in different
+     * implementations in subclasses.
+     */
     protected BlockingQueue<Poolable<T>> createBlockingQueue(PoolConfig poolConfig) {
         return new ArrayBlockingQueue<>(poolConfig.getMaxSize());
     }
