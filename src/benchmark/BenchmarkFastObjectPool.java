@@ -11,17 +11,16 @@ import java.util.List;
  */
 public class BenchmarkFastObjectPool extends Benchmark {
 
-    BenchmarkFastObjectPool(String name, int workerCount, int borrows, int loop) throws InterruptedException {
+    BenchmarkFastObjectPool(String name, int workerCount, int borrows, int loop, int simulateBlockingMs) {
         super(name, workerCount, borrows, loop);
         PoolConfig config = new PoolConfig();
-        config.setPartitionSize(16);
+        config.setPartitionSize(32);
         config.setMaxSize(16);
         config.setMinSize(16);
         config.setMaxIdleMilliseconds(60 * 1000 * 5);
         config.setMaxWaitMilliseconds(10);
 
-
-        ObjectFactory<StringBuilder> factory = new ObjectFactory<StringBuilder>() {
+        ObjectFactory<StringBuilder> factory = new ObjectFactory<>() {
             @Override
             public StringBuilder create() {
                 created.incrementAndGet();
@@ -38,7 +37,7 @@ public class BenchmarkFastObjectPool extends Benchmark {
         ObjectPool<StringBuilder> pool = new ObjectPool<>(config, factory);
         workers = new Worker[workerCount];
         for (int i = 0; i < workerCount; i++) {
-            workers[i] = new Worker(this, i, borrows, loop, pool);
+            workers[i] = new Worker(this, i, borrows, loop, simulateBlockingMs, pool);
         }
     }
 
@@ -46,8 +45,8 @@ public class BenchmarkFastObjectPool extends Benchmark {
 
         private final ObjectPool<StringBuilder> pool;
 
-        Worker(Benchmark benchmark, int id, int borrows, long loop, ObjectPool<StringBuilder> pool) {
-            super(benchmark, id, borrows, loop);
+        Worker(Benchmark benchmark, int id, int borrows, long loop, int simulateBlockingMs, ObjectPool<StringBuilder> pool) {
+            super(benchmark, id, borrows, loop, simulateBlockingMs);
             this.pool = pool;
         }
 
@@ -57,6 +56,7 @@ public class BenchmarkFastObjectPool extends Benchmark {
                 for (int i = 0; i < borrowsPerLoop; i++) {
                     Poolable<StringBuilder> obj = pool.borrowObject(false);
                     obj.getObject().append("X");
+                    if (simulateBlockingMs > 0) Thread.sleep(simulateBlockingMs); // simulate thread blocking
                     list.add(obj);
                 }
             } catch (Exception e) {

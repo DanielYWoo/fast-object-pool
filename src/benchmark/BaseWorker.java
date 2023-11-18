@@ -4,13 +4,15 @@ public abstract class BaseWorker extends Thread {
     private final int id;
     private final long loop;
     protected final int borrowsPerLoop;
+    protected int simulateBlockingMs;
     long err = 0;
 
-    public BaseWorker(Benchmark benchmark, int id, int borrowsPerLoop, long loop) {
+    public BaseWorker(Benchmark benchmark, int id, int borrowsPerLoop, long loop, int simulateBlockingMs) {
         this.benchmark = benchmark;
         this.id = id;
         this.loop = loop;
         this.borrowsPerLoop = borrowsPerLoop;
+        this.simulateBlockingMs = simulateBlockingMs;
     }
 
     @Override public void run() {

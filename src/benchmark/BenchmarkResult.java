@@ -24,17 +24,27 @@ public class BenchmarkResult {
 
     @Override
     public String toString() {
-        return poolName +
-                "," + threads +
-                "," + borrows +
-                "," + loops +
-                "," + created +
-                "," + plotLegend() +
-                "," + errorRate +
-                "," + avgThroughput;
+//        return poolName +
+//                "," + threads +
+//                "," + borrows +
+//                "," + loops +
+//                "," + created +
+//                "," + plotLegend() +
+//                "," + errorRate +
+//                "," + avgThroughput;
+        return threads + "/" + poolName + "," + errorRate + "," + avgThroughput;
     }
 
-    private String plotLegend() {
-        return poolName + "/" + threads;
+    public String getPoolName() {
+        return poolName;
     }
+
+    public double getErrorRate() {
+        return errorRate;
+    }
+
+    public double getAvgThroughput() {
+        return avgThroughput;
+    }
+
 }
