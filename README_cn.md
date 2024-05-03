@@ -90,19 +90,6 @@ Gradle:
 implementation 'com.conversantmedia:disruptor:1.2.19'
 ```
 
-8/9/10 这样的旧 JDK 必须使用旧版本的Disruptor 1.2.15。
-```
-Maven:
-<dependency>
-    <groupId>com.conversantmedia</groupId>
-    <artifactId>disruptor</artifactId>
-    <version>1.2.15</version>
-</dependency>
-
-Gradle:
-implementation 'com.conversantmedia:disruptor:1.2.15'
-```
-
 Logging
 --------------
 FOP 的设计目标之一是零依赖，所以默认使用 JDK logger。如果您使用 slf4j，您可以选择将 jul-to-slf4j 添加到您的依赖项中，以将 JDK 记录器桥接到 slf4j。
