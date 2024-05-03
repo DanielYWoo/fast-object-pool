@@ -100,19 +100,6 @@ For Gradle users:
 implementation 'com.conversantmedia:disruptor:1.2.19'
 ```
 
-Older JDKs like 8/9/10 can also use disruptor but with an older version 1.2.15.
-```
-For Maven users:
-<dependency>
-    <groupId>com.conversantmedia</groupId>
-    <artifactId>disruptor</artifactId>
-    <version>1.2.15</version>
-</dependency>
-
-For Gradle users:
-implementation 'com.conversantmedia:disruptor:1.2.15'
-```
-
 Logging
 --------------
 One of the design goals of FOP is zero dependency, so we use JDK logger by default. If you use slf4j, you can optionally add jul-to-slf4j to your dependency to bridge the JDK logger to slf4j. 
