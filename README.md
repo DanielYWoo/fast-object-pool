@@ -141,4 +141,3 @@ I don't know why Stormpot degrade so fast with two borrows in one thread. If you
 ![](docs/b2-throughput.png?raw=true)
 
 So, in short, if you can ensure borrow at most one object in each thread, Stormpot is the best choice. If you cannot ensure that, use FOP which is more consistent in all scenarios.
-
