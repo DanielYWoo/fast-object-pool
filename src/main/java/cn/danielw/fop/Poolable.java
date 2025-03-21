@@ -11,6 +11,9 @@ public class Poolable<T> implements AutoCloseable {
     private final int partition;
     private long lastAccessTs;
 
+    /**
+    * the number of partitions has an effect on the concurrency, please test with your real production environments to find the best settings
+    */
     public Poolable(T t, ObjectPool<T> pool, int partition) {
         this.object = t;
         this.pool = pool;
